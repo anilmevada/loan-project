@@ -1,7 +1,7 @@
 'use client';
 import { type ReactNode, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Bell,
   Calculator,
@@ -46,6 +46,13 @@ const navItems = [
   { href: '/calculators', icon: Calculator, label: 'Calculators' },
 ];
 
+const availableLoanTypes = [
+  'Home Loan',
+  'Car Loan',
+  'Personal Loan',
+  'Education Loan',
+];
+
 function SearchProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   return (
@@ -57,11 +64,26 @@ function SearchProvider({ children }: { children: ReactNode }) {
 
 function Header() {
     const { searchQuery, setSearchQuery } = useSearch();
+    const router = useRouter();
+
+    const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const query = searchQuery.trim().toLowerCase();
+      const matchedLoan = availableLoanTypes.find(loan => loan.toLowerCase() === query);
+
+      if (matchedLoan) {
+        router.push(`/loans/apply?type=${encodeURIComponent(matchedLoan)}`);
+      } else {
+        // If no exact match, just go to the loans page to show filtered results
+        router.push('/loans');
+      }
+    };
+
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
         <SidebarTrigger />
         <div className="w-full flex-1">
-          <form>
+          <form onSubmit={handleSearchSubmit}>
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
