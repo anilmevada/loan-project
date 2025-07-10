@@ -113,6 +113,21 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="flex flex-col gap-6 animate-in fade-in duration-500">
+        <div className="relative flex overflow-x-hidden bg-primary text-primary-foreground rounded-lg">
+            <div className="py-2 animate-marquee whitespace-nowrap">
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+            </div>
+            <div className="absolute top-0 py-2 animate-marquee2 whitespace-nowrap">
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+            </div>
+        </div>
+
         <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">{greeting}</h1>
         </div>
