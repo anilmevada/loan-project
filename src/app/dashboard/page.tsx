@@ -91,19 +91,21 @@ export default function DashboardPage() {
     }
     
     // Load loan applications from localStorage
-    const storedApplications = localStorage.getItem('loanApplications');
-    if (storedApplications) {
+    const storedApplicationsJSON = localStorage.getItem('loanApplications');
+    if (storedApplicationsJSON) {
         try {
-            const parsed = JSON.parse(storedApplications);
-            if (Array.isArray(parsed) && parsed.length > 0) {
+            const parsed = JSON.parse(storedApplicationsJSON);
+            // Ensure parsed data is an array before setting
+            if (Array.isArray(parsed)) {
                 setLoanApplications(parsed);
             } else {
-                 // if it's an empty array, set defaults
+                // If data is corrupted (not an array), reset to default
                 localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
                 setLoanApplications(defaultLoanApplications);
             }
         } catch (e) {
             console.error("Failed to parse loan applications from localStorage", e);
+            // If parsing fails, assume corrupted data and reset
             localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
             setLoanApplications(defaultLoanApplications);
         }
@@ -242,7 +244,7 @@ export default function DashboardPage() {
             </CardContent>
             {loanApplications.length > 0 && (
                 <CardFooter className="border-t pt-4">
-                    <Button asChild className="w-full transform transition-transform duration-200 active:scale-95">
+                    <Button asChild className="w-full">
                         <Link href="/loans">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             Apply for a New Loan

@@ -58,9 +58,13 @@ function LoanApplicationForm() {
             const parsed = JSON.parse(storedApplicationsJSON);
             if (Array.isArray(parsed)) {
               applications = parsed;
+            } else {
+              // Data is corrupted, start with a fresh array
+              applications = [];
             }
         } catch (error) {
             console.error("Failed to parse loan applications from localStorage", error);
+            // Parsing failed, start with a fresh array
             applications = [];
         }
     }
@@ -75,14 +79,23 @@ function LoanApplicationForm() {
     // Add new application to the top of the list
     const updatedApplications = [newApplication, ...applications];
 
-    localStorage.setItem('loanApplications', JSON.stringify(updatedApplications));
+    try {
+        localStorage.setItem('loanApplications', JSON.stringify(updatedApplications));
 
-    toast({
-      title: 'Application Submitted!',
-      description: 'We have received your loan application and will review it shortly.',
-    });
-    
-    router.push('/dashboard');
+        toast({
+          title: 'Application Submitted!',
+          description: 'We have received your loan application and will review it shortly.',
+        });
+        
+        router.push('/dashboard');
+    } catch(e) {
+        console.error("Failed to save loan applications to localStorage", e);
+        toast({
+            variant: 'destructive',
+            title: 'Failed to Save Application',
+            description: 'Could not save your loan application. Please try again.',
+        });
+    }
   };
 
   const renderStandardForm = () => (
