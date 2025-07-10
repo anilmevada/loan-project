@@ -1,0 +1,70 @@
+import AppLayout from '@/components/AppLayout';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Car, GraduationCap, Home, User } from 'lucide-react';
+import Link from 'next/link';
+
+const loanTypes = [
+  {
+    icon: <Home className="h-8 w-8 text-primary" />,
+    title: 'Home Loan',
+    description: 'Realize your dream of owning a home with our competitive interest rates and flexible repayment options.',
+  },
+  {
+    icon: <Car className="h-8 w-8 text-primary" />,
+    title: 'Car Loan',
+    description: 'Get behind the wheel of your new car faster with our quick and easy auto loan application process.',
+  },
+  {
+    icon: <User className="h-8 w-8 text-primary" />,
+    title: 'Personal Loan',
+    description: 'For your planned or unplanned expenses, a personal loan offers a versatile solution without collateral.',
+  },
+  {
+    icon: <GraduationCap className="h-8 w-8 text-primary" />,
+    title: 'Education Loan',
+    description: 'Invest in your future with our education loans that cover tuition fees, accommodation, and more.',
+  },
+];
+
+export default function LoansPage() {
+  return (
+    <AppLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold">Apply for a Loan</h1>
+          <p className="text-muted-foreground">
+            Choose the type of loan that suits your needs.
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {loanTypes.map((loan) => (
+            <Card key={loan.title} className="flex flex-col">
+              <CardHeader className="flex flex-row items-center gap-4">
+                {loan.icon}
+                <div>
+                  <CardTitle>{loan.title}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <CardDescription>{loan.description}</CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Button asChild className="w-full">
+                  <Link href="/loans/apply">Apply Now</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
