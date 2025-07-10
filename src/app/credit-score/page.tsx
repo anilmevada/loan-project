@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Loader2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
@@ -18,6 +20,8 @@ type CheckState = 'initial' | 'loading' | 'result';
 export default function CreditScorePage() {
   const [checkState, setCheckState] = useState<CheckState>('initial');
   const [score, setScore] = useState(0);
+  const [pan, setPan] = useState('');
+  const [aadhar, setAadhar] = useState('');
 
   useEffect(() => {
     if (checkState === 'loading') {
@@ -35,6 +39,12 @@ export default function CreditScorePage() {
     setCheckState('loading');
   };
 
+  const handleReset = () => {
+    setPan('');
+    setAadhar('');
+    setCheckState('initial');
+  }
+
   const getScoreDescription = (s: number) => {
     if (s >= 800) return { text: 'Excellent', color: 'text-green-600' };
     if (s >= 740) return { text: 'Very Good', color: 'text-green-500' };
@@ -50,18 +60,30 @@ export default function CreditScorePage() {
   return (
     <AppLayout>
       <div className="max-w-2xl mx-auto">
-        <Card className="text-center">
-          <CardHeader>
+        <Card>
+          <CardHeader className="text-center">
             <CardTitle className="text-3xl">Check Your Credit Score</CardTitle>
             <CardDescription>
-              Get your latest credit score from CIBIL for free, in minutes.
+              Enter your Aadhar and PAN details to get your latest CIBIL score for free.
             </CardDescription>
           </CardHeader>
-          <CardContent className="min-h-[250px] flex items-center justify-center">
+          <CardContent className="min-h-[300px] flex items-center justify-center">
             {checkState === 'initial' && (
-              <Button size="lg" onClick={handleCheckScore}>
-                Check Your Score for FREE
-              </Button>
+              <div className="w-full max-w-sm space-y-6">
+                 <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="pan">PAN Card Number</Label>
+                        <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value)} placeholder="ABCDE1234F" required />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="aadhar">Aadhar Card Number</Label>
+                        <Input id="aadhar" value={aadhar} onChange={(e) => setAadhar(e.target.value)} placeholder="xxxx xxxx xxxx" required />
+                    </div>
+                 </div>
+                <Button size="lg" onClick={handleCheckScore} disabled={!pan || !aadhar} className="w-full">
+                  Check Your Score for FREE
+                </Button>
+              </div>
             )}
             {checkState === 'loading' && (
               <div className="flex flex-col items-center gap-4">
@@ -72,14 +94,14 @@ export default function CreditScorePage() {
               </div>
             )}
             {checkState === 'result' && (
-              <div className="w-full space-y-4 animate-in fade-in duration-500">
+              <div className="w-full space-y-4 animate-in fade-in duration-500 text-center">
                 <p className="text-sm text-muted-foreground">Your CIBIL Score is</p>
                 <p className={`text-7xl font-bold ${scoreInfo.color}`}>
                   {score}
                 </p>
                 <Progress value={progressValue} aria-label={`Credit score of ${score}`} />
                 <p className={`font-semibold ${scoreInfo.color}`}>{scoreInfo.text}</p>
-                <Button variant="outline" onClick={() => setCheckState('initial')}>Check Again</Button>
+                <Button variant="outline" onClick={handleReset}>Check Again</Button>
               </div>
             )}
           </CardContent>
