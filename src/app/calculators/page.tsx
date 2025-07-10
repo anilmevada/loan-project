@@ -21,22 +21,22 @@ import { useState } from 'react';
 
 export default function CalculatorsPage() {
   // EMI Calculator State
-  const [principal, setPrincipal] = useState(500000);
-  const [interest, setInterest] = useState(8.5);
-  const [tenure, setTenure] = useState(5);
+  const [principal, setPrincipal] = useState<number | string>('');
+  const [interest, setInterest] = useState<number | string>('');
+  const [tenure, setTenure] = useState<number | string>('');
   const [emi, setEmi] = useState('');
 
   // Eligibility Calculator State
-  const [income, setIncome] = useState(100000);
-  const [existingEmi, setExistingEmi] = useState(15000);
+  const [income, setIncome] = useState<number | string>('');
+  const [existingEmi, setExistingEmi] = useState<number | string>('');
   const [eligibility, setEligibility] = useState('');
 
   const calculateEmi = () => {
-    if (principal > 0 && interest > 0 && tenure > 0) {
-      const monthlyInterest = interest / 12 / 100;
-      const numberOfMonths = tenure * 12;
+    if (Number(principal) > 0 && Number(interest) > 0 && Number(tenure) > 0) {
+      const monthlyInterest = Number(interest) / 12 / 100;
+      const numberOfMonths = Number(tenure) * 12;
       const emiValue =
-        (principal *
+        (Number(principal) *
           monthlyInterest *
           Math.pow(1 + monthlyInterest, numberOfMonths)) /
         (Math.pow(1 + monthlyInterest, numberOfMonths) - 1);
@@ -47,8 +47,8 @@ export default function CalculatorsPage() {
   };
 
   const calculateEligibility = () => {
-    if (income > 0) {
-      const maxEmiPossible = income * 0.5 - existingEmi;
+    if (Number(income) > 0) {
+      const maxEmiPossible = Number(income) * 0.5 - Number(existingEmi);
       if (maxEmiPossible > 0) {
         setEligibility(
           `You are likely eligible for a loan with a monthly EMI up to $${maxEmiPossible.toFixed(2)}.`
@@ -90,15 +90,15 @@ export default function CalculatorsPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="principal">Loan Amount ($)</Label>
-                  <Input id="principal" type="number" value={principal} onChange={(e) => setPrincipal(Number(e.target.value))} />
+                  <Input id="principal" type="number" placeholder="e.g., 500000" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="interest">Interest Rate (% p.a.)</Label>
-                  <Input id="interest" type="number" step="0.1" value={interest} onChange={(e) => setInterest(Number(e.target.value))} />
+                  <Input id="interest" type="number" step="0.1" placeholder="e.g., 8.5" value={interest} onChange={(e) => setInterest(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tenure">Loan Tenure (Years)</Label>
-                  <Input id="tenure" type="number" value={tenure} onChange={(e) => setTenure(Number(e.target.value))} />
+                  <Input id="tenure" type="number" placeholder="e.g., 5" value={tenure} onChange={(e) => setTenure(e.target.value)} />
                 </div>
                 <Button onClick={calculateEmi} className="w-full">
                   Calculate EMI
@@ -123,13 +123,13 @@ export default function CalculatorsPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="income">Monthly Income ($)</Label>
-                  <Input id="income" type="number" value={income} onChange={(e) => setIncome(Number(e.target.value))} />
+                  <Input id="income" type="number" placeholder="e.g., 100000" value={income} onChange={(e) => setIncome(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="existing-emi">
                     Total Existing Monthly EMIs ($)
                   </Label>
-                  <Input id="existing-emi" type="number" value={existingEmi} onChange={(e) => setExistingEmi(Number(e.target.value))} />
+                  <Input id="existing-emi" type="number" placeholder="e.g., 15000" value={existingEmi} onChange={(e) => setExistingEmi(e.target.value)} />
                 </div>
                 <Button onClick={calculateEligibility} className="w-full">
                   Check Eligibility
