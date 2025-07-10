@@ -114,17 +114,21 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="flex flex-col gap-6 animate-in fade-in duration-500">
         <div className="relative flex overflow-x-hidden bg-primary text-primary-foreground rounded-lg">
-            <div className="py-2 animate-marquee whitespace-nowrap">
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+            <div className="py-1 animate-marquee whitespace-nowrap">
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
             </div>
-            <div className="absolute top-0 py-2 animate-marquee2 whitespace-nowrap">
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-lg mx-8 font-semibold">Welcome to LOAN BUDDY.COM</span>
+            <div className="absolute top-0 py-1 animate-marquee2 whitespace-nowrap">
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
             </div>
         </div>
 
