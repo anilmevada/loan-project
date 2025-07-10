@@ -97,7 +97,7 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="flex flex-col gap-6">
-        <h1 className="text-3xl font-bold">Welcome to LOAN BUDDY.COM</h1>
+        <h1 className="text-3xl font-bold uppercase">Welcome to LOAN BUDDY.COM</h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
