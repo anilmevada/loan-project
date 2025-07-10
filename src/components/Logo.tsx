@@ -25,11 +25,11 @@ export default function Logo({ className }: { className?: string }) {
       <LogoIcon className="h-8 w-8 text-primary" />
       <span
         className={cn(
-          'text-2xl font-bold text-foreground',
+          'text-xl font-bold text-foreground',
           className
         )}
       >
-        Loan Hub
+        Loan Buddy Loan Hub
       </span>
     </div>
   );
