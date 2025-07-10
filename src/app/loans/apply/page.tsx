@@ -90,6 +90,72 @@ function LoanApplicationForm() {
     
     router.push('/dashboard');
   };
+
+  const renderStandardForm = () => (
+    <>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="full-name">Full Name</Label>
+          <Input id="full-name" placeholder="Jane Doe" required />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email Address</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="jane.doe@example.com"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+          <Label htmlFor="loan-amount">Loan Amount (₹)</Label>
+          <Input
+            id="loan-amount"
+            type="number"
+            placeholder="e.g., 50000"
+            value={loanAmount}
+            onChange={(e) => setLoanAmount(e.target.value)}
+            required
+          />
+      </div>
+    </>
+  );
+
+  const renderEducationForm = () => (
+    <>
+        <div className="space-y-2">
+            <Label htmlFor="student-name">Student Full Name</Label>
+            <Input id="student-name" placeholder="Alex Smith" required />
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="guardian-name">Father's/Guardian's Name</Label>
+            <Input id="guardian-name" placeholder="John Smith" required />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+                <Label htmlFor="course-name">Course Name</Label>
+                <Input id="course-name" placeholder="B.Tech in Computer Science" required />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="university-name">University/College Name</Label>
+                <Input id="university-name" placeholder="Institute of Technology" required />
+            </div>
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="loan-amount">Loan Amount (₹)</Label>
+            <Input
+                id="loan-amount"
+                type="number"
+                placeholder="e.g., 500000"
+                value={loanAmount}
+                onChange={(e) => setLoanAmount(e.target.value)}
+                required
+            />
+        </div>
+    </>
+  );
   
   return (
     <div className="max-w-2xl mx-auto">
@@ -102,33 +168,8 @@ function LoanApplicationForm() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="full-name">Full Name</Label>
-                <Input id="full-name" placeholder="Jane Doe" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="jane.doe@example.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="loan-amount">Loan Amount (₹)</Label>
-                <Input
-                  id="loan-amount"
-                  type="number"
-                  placeholder="e.g., 50000"
-                  value={loanAmount}
-                  onChange={(e) => setLoanAmount(e.target.value)}
-                  required
-                />
-            </div>
+            
+            {loanType === 'Education Loan' ? renderEducationForm() : renderStandardForm()}
 
             <div className="space-y-2">
               <Label>Upload Documents</Label>
@@ -137,7 +178,7 @@ function LoanApplicationForm() {
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <UploadCloud className="w-8 h-8 mb-3 text-muted-foreground" />
                           <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-muted-foreground">PDF, PNG, JPG (MAX. 5MB)</p>
+                          <p className="text-xs text-muted-foreground">ID, Address Proof, Income Proof (PDF, JPG)</p>
                       </div>
                       <input id="dropzone-file" type="file" className="hidden" />
                   </label>
