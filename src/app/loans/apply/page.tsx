@@ -12,13 +12,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { UploadCloud } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -35,7 +28,15 @@ function LoanApplicationForm() {
 
   useEffect(() => {
     setLoanType(initialLoanType);
-  }, [initialLoanType]);
+    if (!initialLoanType) {
+        toast({
+            variant: 'destructive',
+            title: 'No Loan Type Selected',
+            description: 'Please select a loan from the loans page first.',
+        });
+        router.push('/loans');
+    }
+  }, [initialLoanType, router, toast]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,8 +45,9 @@ function LoanApplicationForm() {
         toast({
             variant: 'destructive',
             title: 'Loan Type Required',
-            description: 'Please select a loan type to proceed.',
+            description: 'Something went wrong. Please select a loan from the loans page.',
         });
+        router.push('/loans');
         return;
     }
 
@@ -93,9 +95,9 @@ function LoanApplicationForm() {
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Loan Application Form</CardTitle>
+          <CardTitle>Apply for {loanType || 'a Loan'}</CardTitle>
           <CardDescription>
-            Please fill out the form below to apply for a loan.
+            Please fill out the form below to apply for your loan.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -116,22 +118,7 @@ function LoanApplicationForm() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="loan-type">Loan Type</Label>
-                <Select onValueChange={setLoanType} value={loanType} required disabled={!!initialLoanType}>
-                  <SelectTrigger id="loan-type">
-                    <SelectValue placeholder="Select a loan type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Home Loan">Home Loan</SelectItem>
-                    <SelectItem value="Car Loan">Car Loan</SelectItem>
-                    <SelectItem value="Personal Loan">Personal Loan</SelectItem>
-                    <SelectItem value="Education Loan">Education Loan</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor="loan-amount">Loan Amount (₹)</Label>
                 <Input
                   id="loan-amount"
@@ -141,7 +128,6 @@ function LoanApplicationForm() {
                   onChange={(e) => setLoanAmount(e.target.value)}
                   required
                 />
-              </div>
             </div>
 
             <div className="space-y-2">
@@ -159,7 +145,7 @@ function LoanApplicationForm() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">Submit Application</Button>
+            <Button type="submit" className="w-full" disabled={!loanType}>Submit Application</Button>
           </CardFooter>
         </form>
       </Card>
