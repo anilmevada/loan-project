@@ -29,7 +29,7 @@ export default function Logo({ className }: { className?: string }) {
           className
         )}
       >
-        Apex Finance Hub
+        Loan Hub
       </span>
     </div>
   );
