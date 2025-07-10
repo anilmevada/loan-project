@@ -1,5 +1,5 @@
 'use client';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import Logo from './Logo';
-import { SearchProvider, useSearch } from '@/hooks/use-search';
+import { SearchContext, useSearch } from '@/hooks/use-search';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -45,6 +45,15 @@ const navItems = [
   { href: '/credit-score', icon: Gauge, label: 'Credit Score' },
   { href: '/calculators', icon: Calculator, label: 'Calculators' },
 ];
+
+function SearchProvider({ children }: { children: ReactNode }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  return (
+    <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+      {children}
+    </SearchContext.Provider>
+  );
+}
 
 function Header() {
     const { searchQuery, setSearchQuery } = useSearch();

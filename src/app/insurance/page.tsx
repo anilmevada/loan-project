@@ -35,7 +35,7 @@ const insuranceTypes = [
   },
 ];
 
-export default function InsurancePage() {
+function InsurancePageContent() {
   const { searchQuery } = useSearch();
 
   const filteredInsurance = insuranceTypes.filter(insurance => 
@@ -44,33 +44,40 @@ export default function InsurancePage() {
   );
 
   return (
-    <>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Insurance Services</h1>
-          <p className="text-muted-foreground">
-            Find the right insurance coverage to protect what matters most.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredInsurance.map((insurance) => (
-            <Card key={insurance.title} className="flex flex-col">
-              <CardHeader className="flex flex-row items-center gap-4">
-                {insurance.icon}
-                <div>
-                  <CardTitle>{insurance.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <CardDescription>{insurance.description}</CardDescription>
-              </CardContent>
-              <CardFooter>
-                <Button variant="secondary" className="w-full">View Plans</Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Insurance Services</h1>
+        <p className="text-muted-foreground">
+          Find the right insurance coverage to protect what matters most.
+        </p>
       </div>
-    </>
+      <div className="grid gap-6 md:grid-cols-2">
+        {filteredInsurance.map((insurance) => (
+          <Card key={insurance.title} className="flex flex-col">
+            <CardHeader className="flex flex-row items-center gap-4">
+              {insurance.icon}
+              <div>
+                <CardTitle>{insurance.title}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <CardDescription>{insurance.description}</CardDescription>
+            </CardContent>
+            <CardFooter>
+              <Button variant="secondary" className="w-full">View Plans</Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
+}
+
+
+export default function InsurancePage() {
+    return (
+        <AppLayout>
+            <InsurancePageContent />
+        </AppLayout>
+    )
 }

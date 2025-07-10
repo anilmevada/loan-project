@@ -36,7 +36,7 @@ const loanTypes = [
   },
 ];
 
-export default function LoansPage() {
+function LoansPageContent() {
     const { searchQuery } = useSearch();
 
     const filteredLoans = loanTypes.filter(loan => 
@@ -45,35 +45,41 @@ export default function LoansPage() {
     );
 
   return (
-    <>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Apply for a Loan</h1>
-          <p className="text-muted-foreground">
-            Choose the type of loan that suits your needs.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredLoans.map((loan) => (
-            <Card key={loan.title} className="flex flex-col">
-              <CardHeader className="flex flex-row items-center gap-4">
-                {loan.icon}
-                <div>
-                  <CardTitle>{loan.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <CardDescription>{loan.description}</CardDescription>
-              </CardContent>
-              <CardFooter>
-                <Button asChild className="w-full">
-                  <Link href="/loans/apply">Apply Now</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Apply for a Loan</h1>
+        <p className="text-muted-foreground">
+          Choose the type of loan that suits your needs.
+        </p>
       </div>
-    </>
+      <div className="grid gap-6 md:grid-cols-2">
+        {filteredLoans.map((loan) => (
+          <Card key={loan.title} className="flex flex-col">
+            <CardHeader className="flex flex-row items-center gap-4">
+              {loan.icon}
+              <div>
+                <CardTitle>{loan.title}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <CardDescription>{loan.description}</CardDescription>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                <Link href="/loans/apply">Apply Now</Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
+}
+
+export default function LoansPage() {
+    return (
+        <AppLayout>
+            <LoansPageContent />
+        </AppLayout>
+    )
 }
