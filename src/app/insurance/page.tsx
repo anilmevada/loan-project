@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useSearch } from '@/hooks/use-search';
+import { useToast } from '@/hooks/use-toast';
 import { Car, CheckCircle, HeartPulse, Plane, Umbrella } from 'lucide-react';
 import React from 'react';
 
@@ -62,6 +63,14 @@ const insuranceTypes = [
 
 function InsurancePageContent() {
   const { searchQuery } = useSearch();
+  const { toast } = useToast();
+
+  const handleViewPlans = (insuranceTitle: string) => {
+    toast({
+        title: "Coming Soon!",
+        description: `Detailed plans & pricing for ${insuranceTitle} will be available shortly.`
+    })
+  }
 
   const filteredInsurance = insuranceTypes.filter(insurance => 
       insurance.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -97,7 +106,7 @@ function InsurancePageContent() {
                 </ul>
             </CardContent>
             <CardFooter>
-              <Button variant="secondary" className="w-full">View Plans & Pricing</Button>
+              <Button variant="secondary" className="w-full" onClick={() => handleViewPlans(insurance.title)}>View Plans & Pricing</Button>
             </CardFooter>
           </Card>
         ))}
