@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 
 export const metadata: Metadata = {
-  title: 'Loan Buddy Loan Hub',
+  title: 'loan buddy.com',
   description:
-    'Loan Buddy Loan Hub - Your one-stop solution for loans, insurance, and credit management.',
+    'loan buddy.com - Your one-stop solution for loans, insurance, and credit management.',
 };
 
 export default function RootLayout({
