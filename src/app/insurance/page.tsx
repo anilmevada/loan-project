@@ -1,5 +1,6 @@
 'use client';
 import AppLayout from '@/components/AppLayout';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -79,7 +80,11 @@ function InsurancePageContent() {
         {filteredInsurance.map((insurance) => (
           <Card key={insurance.title} className="flex flex-col">
             <CardHeader className="flex flex-row items-center gap-4">
-              {insurance.icon}
+              <Avatar className="h-16 w-16">
+                  <AvatarFallback className="bg-primary/10">
+                    {React.cloneElement(insurance.icon, { className: 'h-8 w-8 text-primary' })}
+                  </AvatarFallback>
+              </Avatar>
               <div>
                 <CardTitle>{insurance.title}</CardTitle>
                 <CardDescription className="mt-1">{insurance.description}</CardDescription>
