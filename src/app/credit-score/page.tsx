@@ -26,11 +26,23 @@ export default function CreditScorePage() {
   const [aadhar, setAadhar] = useState('');
 
   useEffect(() => {
+    // Check if a score is already in localStorage
+    const storedScore = localStorage.getItem('creditScore');
+    if (storedScore) {
+      setScore(JSON.parse(storedScore).score);
+      setCheckState('result');
+    }
+  }, []);
+
+
+  useEffect(() => {
     if (checkState === 'loading') {
       const timer = setTimeout(() => {
         // Simulate a score between 600 and 850
         const randomScore = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
         setScore(randomScore);
+        // Save the new score and date to localStorage
+        localStorage.setItem('creditScore', JSON.stringify({ score: randomScore, date: new Date() }));
         setCheckState('result');
       }, 2000);
       return () => clearTimeout(timer);
@@ -48,7 +60,7 @@ export default function CreditScorePage() {
         return;
     }
       
-    if (aadhar.length < 12) {
+    if (aadhar.length !== 12) {
       toast({
         variant: 'destructive',
         title: 'Invalid Aadhar Number',
@@ -62,6 +74,7 @@ export default function CreditScorePage() {
   const handleReset = () => {
     setPan('');
     setAadhar('');
+    localStorage.removeItem('creditScore');
     setCheckState('initial');
   }
 
@@ -97,7 +110,7 @@ export default function CreditScorePage() {
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="aadhar">Aadhar Card Number</Label>
-                        <Input id="aadhar" type="number" value={aadhar} onChange={(e) => setAadhar(e.target.value)} placeholder="xxxx xxxx xxxx" required />
+                        <Input id="aadhar" type="text" value={aadhar} onChange={(e) => setAadhar(e.target.value.replace(/\D/g, '').slice(0, 12))} placeholder="xxxx xxxx xxxx" maxLength={12} required />
                     </div>
                  </div>
                 <Button size="lg" onClick={handleCheckScore} disabled={!pan || !aadhar} className="w-full">

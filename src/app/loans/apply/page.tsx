@@ -51,15 +51,16 @@ function LoanApplicationForm() {
         return;
     }
 
-    const storedApplications = localStorage.getItem('loanApplications');
+    const storedApplicationsJSON = localStorage.getItem('loanApplications');
     let applications = [];
-    if (storedApplications) {
+    if (storedApplicationsJSON) {
         try {
-            applications = JSON.parse(storedApplications);
-            if (!Array.isArray(applications)) {
-              applications = [];
+            const parsed = JSON.parse(storedApplicationsJSON);
+            if (Array.isArray(parsed)) {
+              applications = parsed;
             }
         } catch (error) {
+            console.error("Failed to parse loan applications from localStorage", error);
             applications = [];
         }
     }
@@ -71,17 +72,10 @@ function LoanApplicationForm() {
       date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
     };
 
-    const defaultLoans = [
-      { type: 'Home Loan', amount: '₹35,00,000', status: 'Approved', date: '2024-07-15' },
-      { type: 'Car Loan', amount: '₹2,50,000', status: 'Pending', date: '2024-07-20' },
-      { type: 'Personal Loan', amount: '₹1,00,000', status: 'Rejected', date: '2024-07-18' },
-    ];
-    
-    // Filter out default loans that might have been there before any user interaction
-    const userApplications = applications.filter(app => !defaultLoans.some(def => def.date === app.date && def.type === app.type));
+    // Add new application to the top of the list
+    const updatedApplications = [newApplication, ...applications];
 
-    userApplications.unshift(newApplication); // Add new application to the top
-    localStorage.setItem('loanApplications', JSON.stringify(userApplications));
+    localStorage.setItem('loanApplications', JSON.stringify(updatedApplications));
 
     toast({
       title: 'Application Submitted!',

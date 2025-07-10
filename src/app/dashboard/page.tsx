@@ -77,6 +77,8 @@ const notifications = [
 export default function DashboardPage() {
   const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
   const [greeting, setGreeting] = useState('');
+  const [creditScore, setCreditScore] = useState(780); // Default score
+  const [scoreLastChecked, setScoreLastChecked] = useState('2024-07-01');
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -88,27 +90,48 @@ export default function DashboardPage() {
       setGreeting('Good Evening!');
     }
     
+    // Load loan applications from localStorage
     const storedApplications = localStorage.getItem('loanApplications');
-    let applications = [];
     if (storedApplications) {
         try {
             const parsed = JSON.parse(storedApplications);
-            if (Array.isArray(parsed)) {
-                applications = parsed;
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                setLoanApplications(parsed);
+            } else {
+                 // if it's an empty array, set defaults
+                localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
+                setLoanApplications(defaultLoanApplications);
             }
         } catch (e) {
             console.error("Failed to parse loan applications from localStorage", e);
+            localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
+            setLoanApplications(defaultLoanApplications);
         }
-    }
-
-    // Only set default applications if local storage is completely empty.
-    if (applications.length > 0) {
-      setLoanApplications(applications);
-    } else if (localStorage.getItem('loanApplications') === null) {
+    } else {
+        // Only set default applications if local storage is completely empty.
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
         setLoanApplications(defaultLoanApplications);
     }
+
+    // Load credit score from localStorage
+    const storedScore = localStorage.getItem('creditScore');
+    if (storedScore) {
+      const { score, date } = JSON.parse(storedScore);
+      setCreditScore(score);
+      setScoreLastChecked(new Date(date).toISOString().split('T')[0]);
+    }
+
   }, []);
+
+  const getScoreDescription = (s: number) => {
+    if (s >= 800) return 'Excellent';
+    if (s >= 740) return 'Very Good';
+    if (s >= 670) return 'Good';
+    if (s >= 580) return 'Fair';
+    return 'Poor';
+  };
+
+  const progressValue = ((creditScore - 300) / (850 - 300)) * 100;
 
   return (
     <AppLayout>
@@ -137,24 +160,26 @@ export default function DashboardPage() {
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-            <CardHeader>
-              <CardTitle>Credit Health</CardTitle>
-              <CardDescription>
-                Your current credit score overview.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <div className="text-center">
-                <span className="text-6xl font-bold text-primary">780</span>
-                <p className="text-lg text-muted-foreground">Excellent</p>
-              </div>
-              <Progress value={85} aria-label="Credit score of 780" />
-              <p className="text-sm text-center text-muted-foreground">
-                Last checked: 2024-07-01
-              </p>
-            </CardContent>
-          </Card>
+          <Link href="/credit-score" className="block">
+            <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl h-full">
+              <CardHeader>
+                <CardTitle>Credit Health</CardTitle>
+                <CardDescription>
+                  Your current credit score overview.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <div className="text-center">
+                  <span className="text-6xl font-bold text-primary">{creditScore}</span>
+                  <p className="text-lg text-muted-foreground">{getScoreDescription(creditScore)}</p>
+                </div>
+                <Progress value={progressValue} aria-label={`Credit score of ${creditScore}`} />
+                <p className="text-sm text-center text-muted-foreground">
+                  Last checked: {scoreLastChecked}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
           <Card className="lg:col-span-2 flex flex-col transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
             <CardHeader>
               <CardTitle>Loan Application Status</CardTitle>
