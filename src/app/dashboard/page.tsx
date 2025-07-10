@@ -73,8 +73,20 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const storedApplications = localStorage.getItem('loanApplications');
+    let applications = [];
     if (storedApplications) {
-      setLoanApplications(JSON.parse(storedApplications));
+        try {
+            const parsed = JSON.parse(storedApplications);
+            if (Array.isArray(parsed)) {
+                applications = parsed;
+            }
+        } catch (e) {
+            console.error("Failed to parse loan applications from localStorage", e);
+        }
+    }
+
+    if (applications.length > 0) {
+      setLoanApplications(applications);
     } else {
         // Initialize with default if nothing is in storage
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
@@ -123,7 +135,7 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loanApplications.map((loan, index) => (
+                  {loanApplications.length > 0 ? loanApplications.map((loan, index) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium">{loan.type}</TableCell>
                       <TableCell>{loan.amount}</TableCell>
@@ -149,7 +161,11 @@ export default function DashboardPage() {
                       </TableCell>
                       <TableCell className="text-right">{loan.date}</TableCell>
                     </TableRow>
-                  ))}
+                  )) : (
+                     <TableRow>
+                        <TableCell colSpan={4} className="text-center">No applications yet.</TableCell>
+                     </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </CardContent>

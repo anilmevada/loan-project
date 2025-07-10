@@ -66,7 +66,7 @@ function LoansPageContent() {
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
-                <Link href="/loans/apply">Apply Now</Link>
+                <Link href={`/loans/apply?type=${encodeURIComponent(loan.title)}`}>Apply Now</Link>
               </Button>
             </CardFooter>
           </Card>

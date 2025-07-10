@@ -21,30 +21,65 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { UploadCloud } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
 
-export default function LoanApplicationPage() {
+function LoanApplicationForm() {
   const { toast } = useToast();
   const router = useRouter();
-  const [loanType, setLoanType] = useState('');
+  const searchParams = useSearchParams();
+  const initialLoanType = searchParams.get('type') || '';
+  
+  const [loanType, setLoanType] = useState(initialLoanType);
   const [loanAmount, setLoanAmount] = useState('');
+
+  useEffect(() => {
+    setLoanType(initialLoanType);
+  }, [initialLoanType]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!loanType) {
+        toast({
+            variant: 'destructive',
+            title: 'Loan Type Required',
+            description: 'Please select a loan type to proceed.',
+        });
+        return;
+    }
+
     const storedApplications = localStorage.getItem('loanApplications');
-    const applications = storedApplications ? JSON.parse(storedApplications) : [];
+    let applications = [];
+    if (storedApplications) {
+        try {
+            applications = JSON.parse(storedApplications);
+            if (!Array.isArray(applications)) {
+              applications = [];
+            }
+        } catch (error) {
+            applications = [];
+        }
+    }
 
     const newApplication = {
-      type: loanType || 'N/A',
+      type: loanType,
       amount: `$${Number(loanAmount).toLocaleString()}`,
       status: 'Pending',
       date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
     };
 
-    applications.push(newApplication);
-    localStorage.setItem('loanApplications', JSON.stringify(applications));
+    const defaultLoans = [
+      { type: 'Home Loan', amount: '$350,000', status: 'Approved', date: '2024-07-15' },
+      { type: 'Car Loan', amount: '$25,000', status: 'Pending', date: '2024-07-20' },
+      { type: 'Personal Loan', amount: '$10,000', status: 'Rejected', date: '2024-07-18' },
+    ];
+    
+    // Filter out default loans that might have been there before any user interaction
+    const userApplications = applications.filter(app => !defaultLoans.some(def => def.date === app.date && def.type === app.type));
+
+    userApplications.unshift(newApplication); // Add new application to the top
+    localStorage.setItem('loanApplications', JSON.stringify(userApplications));
 
     toast({
       title: 'Application Submitted!',
@@ -55,81 +90,89 @@ export default function LoanApplicationPage() {
   };
   
   return (
-    <AppLayout>
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>Loan Application Form</CardTitle>
-            <CardDescription>
-              Please fill out the form below to apply for a loan.
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="full-name">Full Name</Label>
-                  <Input id="full-name" placeholder="Jane Doe" required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="jane.doe@example.com"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="loan-type">Loan Type</Label>
-                  <Select onValueChange={setLoanType} required>
-                    <SelectTrigger id="loan-type">
-                      <SelectValue placeholder="Select a loan type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Home Loan">Home Loan</SelectItem>
-                      <SelectItem value="Car Loan">Car Loan</SelectItem>
-                      <SelectItem value="Personal Loan">Personal Loan</SelectItem>
-                      <SelectItem value="Education Loan">Education Loan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="loan-amount">Loan Amount ($)</Label>
-                  <Input
-                    id="loan-amount"
-                    type="number"
-                    placeholder="e.g., 50000"
-                    value={loanAmount}
-                    onChange={(e) => setLoanAmount(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
+    <div className="max-w-2xl mx-auto">
+      <Card>
+        <CardHeader>
+          <CardTitle>Loan Application Form</CardTitle>
+          <CardDescription>
+            Please fill out the form below to apply for a loan.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Upload Documents</Label>
-                <div className="flex items-center justify-center w-full">
-                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/80">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <UploadCloud className="w-8 h-8 mb-3 text-muted-foreground" />
-                            <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p className="text-xs text-muted-foreground">PDF, PNG, JPG (MAX. 5MB)</p>
-                        </div>
-                        <input id="dropzone-file" type="file" className="hidden" />
-                    </label>
-                </div>
+                <Label htmlFor="full-name">Full Name</Label>
+                <Input id="full-name" placeholder="Jane Doe" required />
               </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full">Submit Application</Button>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
-    </AppLayout>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="jane.doe@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="loan-type">Loan Type</Label>
+                <Select onValueChange={setLoanType} value={loanType} required disabled={!!initialLoanType}>
+                  <SelectTrigger id="loan-type">
+                    <SelectValue placeholder="Select a loan type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Home Loan">Home Loan</SelectItem>
+                    <SelectItem value="Car Loan">Car Loan</SelectItem>
+                    <SelectItem value="Personal Loan">Personal Loan</SelectItem>
+                    <SelectItem value="Education Loan">Education Loan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="loan-amount">Loan Amount ($)</Label>
+                <Input
+                  id="loan-amount"
+                  type="number"
+                  placeholder="e.g., 50000"
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Upload Documents</Label>
+              <div className="flex items-center justify-center w-full">
+                  <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/80">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <UploadCloud className="w-8 h-8 mb-3 text-muted-foreground" />
+                          <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                          <p className="text-xs text-muted-foreground">PDF, PNG, JPG (MAX. 5MB)</p>
+                      </div>
+                      <input id="dropzone-file" type="file" className="hidden" />
+                  </label>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full">Submit Application</Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
+}
+
+export default function LoanApplicationPage() {
+    return (
+        <AppLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoanApplicationForm />
+          </Suspense>
+        </AppLayout>
+    )
 }
