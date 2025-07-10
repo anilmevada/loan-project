@@ -64,15 +64,15 @@ function LoanApplicationForm() {
 
     const newApplication = {
       type: loanType,
-      amount: `$${Number(loanAmount).toLocaleString()}`,
+      amount: `₹${Number(loanAmount).toLocaleString()}`,
       status: 'Pending',
       date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
     };
 
     const defaultLoans = [
-      { type: 'Home Loan', amount: '$350,000', status: 'Approved', date: '2024-07-15' },
-      { type: 'Car Loan', amount: '$25,000', status: 'Pending', date: '2024-07-20' },
-      { type: 'Personal Loan', amount: '$10,000', status: 'Rejected', date: '2024-07-18' },
+      { type: 'Home Loan', amount: '₹35,00,000', status: 'Approved', date: '2024-07-15' },
+      { type: 'Car Loan', amount: '₹2,50,000', status: 'Pending', date: '2024-07-20' },
+      { type: 'Personal Loan', amount: '₹1,00,000', status: 'Rejected', date: '2024-07-18' },
     ];
     
     // Filter out default loans that might have been there before any user interaction
@@ -132,7 +132,7 @@ function LoanApplicationForm() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loan-amount">Loan Amount ($)</Label>
+                <Label htmlFor="loan-amount">Loan Amount (₹)</Label>
                 <Input
                   id="loan-amount"
                   type="number"

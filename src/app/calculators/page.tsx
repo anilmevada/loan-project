@@ -51,7 +51,7 @@ export default function CalculatorsPage() {
       const maxEmiPossible = Number(income) * 0.5 - Number(existingEmi);
       if (maxEmiPossible > 0) {
         setEligibility(
-          `You are likely eligible for a loan with a monthly EMI up to $${maxEmiPossible.toFixed(2)}.`
+          `You are likely eligible for a loan with a monthly EMI up to ₹${maxEmiPossible.toFixed(2)}.`
         );
       } else {
         setEligibility(
@@ -89,7 +89,7 @@ export default function CalculatorsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="principal">Loan Amount ($)</Label>
+                  <Label htmlFor="principal">Loan Amount (₹)</Label>
                   <Input id="principal" type="number" placeholder="e.g., 500000" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
                 </div>
                 <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function CalculatorsPage() {
                 {emi && (
                   <div className="text-center bg-accent/20 p-4 rounded-lg">
                     <p className="text-lg">Your Monthly EMI is</p>
-                    <p className="text-3xl font-bold text-primary">${emi}</p>
+                    <p className="text-3xl font-bold text-primary">₹{emi}</p>
                   </div>
                 )}
               </CardContent>
@@ -122,12 +122,12 @@ export default function CalculatorsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="income">Monthly Income ($)</Label>
+                  <Label htmlFor="income">Monthly Income (₹)</Label>
                   <Input id="income" type="number" placeholder="e.g., 100000" value={income} onChange={(e) => setIncome(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="existing-emi">
-                    Total Existing Monthly EMIs ($)
+                    Total Existing Monthly EMIs (₹)
                   </Label>
                   <Input id="existing-emi" type="number" placeholder="e.g., 15000" value={existingEmi} onChange={(e) => setExistingEmi(e.target.value)} />
                 </div>

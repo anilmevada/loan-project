@@ -32,19 +32,19 @@ type LoanApplication = {
 const defaultLoanApplications: LoanApplication[] = [
   {
     type: 'Home Loan',
-    amount: '$350,000',
+    amount: '₹35,00,000',
     status: 'Approved',
     date: '2024-07-15',
   },
   {
     type: 'Car Loan',
-    amount: '$25,000',
+    amount: '₹2,50,000',
     status: 'Pending',
     date: '2024-07-20',
   },
   {
     type: 'Personal Loan',
-    amount: '$10,000',
+    amount: '₹1,00,000',
     status: 'Rejected',
     date: '2024-07-18',
   },
