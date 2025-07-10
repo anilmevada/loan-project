@@ -13,6 +13,12 @@ import { useSearch } from '@/hooks/use-search';
 import { useToast } from '@/hooks/use-toast';
 import { Car, CheckCircle, HeartPulse, Plane, Umbrella, UserCheck } from 'lucide-react';
 import React from 'react';
+import type { Metadata } from 'next';
+
+const metadata: Metadata = {
+    title: 'Insurance Services | LOAN BUDDY.COM',
+    description: 'Protect what matters most. Explore our range of insurance plans, including Health, Vehicle, Life, and Travel insurance.',
+};
 
 const insuranceTypes = [
   {
@@ -130,6 +136,8 @@ function InsurancePageContent() {
 export default function InsurancePage() {
     return (
         <AppLayout>
+            <title>{metadata.title as string}</title>
+            <meta name="description" content={metadata.description as string} />
             <InsurancePageContent />
         </AppLayout>
     )

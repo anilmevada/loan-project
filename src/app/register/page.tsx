@@ -10,6 +10,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/Logo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Sign Up | LOAN BUDDY.COM',
+    description: 'Create a new account with LOAN BUDDY.COM to get started with our financial services.',
+};
 
 export default function RegisterPage() {
   return (

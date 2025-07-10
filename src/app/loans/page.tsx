@@ -12,6 +12,12 @@ import {
 import { useSearch } from '@/hooks/use-search';
 import { Car, GraduationCap, Home, User } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+const metadata: Metadata = {
+    title: 'Apply for a Loan | LOAN BUDDY.COM',
+    description: 'Find the perfect loan for your needs. We offer Home Loans, Car Loans, Personal Loans, and Education Loans with competitive rates.',
+};
 
 const loanTypes = [
   {
@@ -79,6 +85,8 @@ function LoansPageContent() {
 export default function LoansPage() {
     return (
         <AppLayout>
+            <title>{metadata.title as string}</title>
+            <meta name="description" content={metadata.description as string} />
             <LoansPageContent />
         </AppLayout>
     )

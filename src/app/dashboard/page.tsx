@@ -24,6 +24,12 @@ import { BellRing, CheckCircle2, FileWarning, PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import type { Metadata } from 'next';
+
+const metadata: Metadata = {
+    title: 'Dashboard | LOAN BUDDY.COM',
+    description: 'Your personal finance dashboard. Track loan applications, check your credit score, and get important notifications.',
+};
 
 type LoanApplication = {
   type: string;
@@ -74,7 +80,7 @@ const notifications = [
     },
 ];
 
-export default function DashboardPage() {
+function DashboardContent() {
   const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
   const [greeting, setGreeting] = useState('');
   const [creditScore, setCreditScore] = useState(780); // Default score
@@ -136,152 +142,160 @@ export default function DashboardPage() {
   const progressValue = ((creditScore - 300) / (850 - 300)) * 100;
 
   return (
-    <AppLayout>
-      <div className="flex flex-col gap-6 animate-in fade-in duration-500">
-        <div className="relative flex overflow-x-hidden bg-primary text-primary-foreground rounded-lg">
-            <div className="py-1 animate-marquee whitespace-nowrap">
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-            </div>
-            <div className="absolute top-0 py-1 animate-marquee2 whitespace-nowrap">
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-                <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-            </div>
-        </div>
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500">
+      <div className="relative flex overflow-x-hidden bg-primary text-primary-foreground rounded-lg">
+          <div className="py-1 animate-marquee whitespace-nowrap">
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+          </div>
+          <div className="absolute top-0 py-1 animate-marquee2 whitespace-nowrap">
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+          </div>
+      </div>
 
-        <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">{greeting}</h1>
-        </div>
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Link href="/credit-score" className="block">
-            <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl h-full">
-              <CardHeader>
-                <CardTitle>Credit Health</CardTitle>
-                <CardDescription>
-                  Your current credit score overview.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <div className="text-center">
-                  <span className="text-6xl font-bold text-primary">{creditScore}</span>
-                  <p className="text-lg text-muted-foreground">{getScoreDescription(creditScore)}</p>
-                </div>
-                <Progress value={progressValue} aria-label={`Credit score of ${creditScore}`} />
-                <p className="text-sm text-center text-muted-foreground">
-                  Last checked: {scoreLastChecked}
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-          <Card className="lg:col-span-2 flex flex-col transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+      <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">{greeting}</h1>
+      </div>
+      
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Link href="/credit-score" className="block">
+          <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl h-full">
             <CardHeader>
-              <CardTitle>Loan Application Status</CardTitle>
+              <CardTitle>Credit Health</CardTitle>
               <CardDescription>
-                Track your recent loan applications.
+                Your current credit score overview.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Loan Type</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Date</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {loanApplications.length > 0 ? loanApplications.map((loan, index) => (
-                    <TableRow key={index} className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500" style={{ animationDelay: `${index * 100}ms`}}>
-                      <TableCell className="font-medium">{loan.type}</TableCell>
-                      <TableCell>{loan.amount}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            loan.status === 'Approved'
-                              ? 'default'
-                              : loan.status === 'Pending'
-                              ? 'secondary'
-                              : 'destructive'
-                          }
-                           className={
-                            loan.status === 'Approved'
-                              ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700'
-                              : loan.status === 'Pending'
-                              ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-700'
-                              : 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700'
-                          }
-                        >
-                          {loan.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">{loan.date}</TableCell>
-                    </TableRow>
-                  )) : (
-                     <TableRow>
-                        <TableCell colSpan={4} className="text-center py-10">
-                            <p className="mb-2">You have no active loan applications.</p>
-                            <Button variant="outline" size="sm" asChild>
-                                <Link href="/loans">
-                                    <PlusCircle className="mr-2 h-4 w-4" />
-                                    Apply for a Loan
-                                </Link>
-                            </Button>
-                        </TableCell>
-                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-            {loanApplications.length > 0 && (
-                <CardFooter className="border-t pt-4">
-                    <Button asChild className="w-full">
-                        <Link href="/loans">
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Apply for a New Loan
-                        </Link>
-                    </Button>
-                </CardFooter>
-            )}
-          </Card>
-          <Card className="lg:col-span-3 transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
-            <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>Recent updates and alerts.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                {notifications.map((notification, index) => (
-                  <Link key={index} href={notification.href} className="block rounded-lg hover:bg-muted/50 -mx-2 px-2 py-2 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-10 w-10 border">
-                        <AvatarFallback className="bg-transparent">
-                          {notification.icon}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="grid gap-1 flex-1">
-                        <p className="text-sm font-medium">{notification.text}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {notification.time}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+            <CardContent className="flex flex-col gap-4">
+              <div className="text-center">
+                <span className="text-6xl font-bold text-primary">{creditScore}</span>
+                <p className="text-lg text-muted-foreground">{getScoreDescription(creditScore)}</p>
               </div>
+              <Progress value={progressValue} aria-label={`Credit score of ${creditScore}`} />
+              <p className="text-sm text-center text-muted-foreground">
+                Last checked: {scoreLastChecked}
+              </p>
             </CardContent>
           </Card>
-        </div>
+        </Link>
+        <Card className="lg:col-span-2 flex flex-col transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+          <CardHeader>
+            <CardTitle>Loan Application Status</CardTitle>
+            <CardDescription>
+              Track your recent loan applications.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Loan Type</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loanApplications.length > 0 ? loanApplications.map((loan, index) => (
+                  <TableRow key={index} className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500" style={{ animationDelay: `${index * 100}ms`}}>
+                    <TableCell className="font-medium">{loan.type}</TableCell>
+                    <TableCell>{loan.amount}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          loan.status === 'Approved'
+                            ? 'default'
+                            : loan.status === 'Pending'
+                            ? 'secondary'
+                            : 'destructive'
+                        }
+                         className={
+                          loan.status === 'Approved'
+                            ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700'
+                            : loan.status === 'Pending'
+                            ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-700'
+                            : 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700'
+                        }
+                      >
+                        {loan.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">{loan.date}</TableCell>
+                  </TableRow>
+                )) : (
+                   <TableRow>
+                      <TableCell colSpan={4} className="text-center py-10">
+                          <p className="mb-2">You have no active loan applications.</p>
+                          <Button variant="outline" size="sm" asChild>
+                              <Link href="/loans">
+                                  <PlusCircle className="mr-2 h-4 w-4" />
+                                  Apply for a Loan
+                              </Link>
+                          </Button>
+                      </TableCell>
+                   </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+          {loanApplications.length > 0 && (
+              <CardFooter className="border-t pt-4">
+                  <Button asChild className="w-full">
+                      <Link href="/loans">
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          Apply for a New Loan
+                      </Link>
+                  </Button>
+              </CardFooter>
+          )}
+        </Card>
+        <Card className="lg:col-span-3 transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+          <CardHeader>
+            <CardTitle>Notifications</CardTitle>
+            <CardDescription>Recent updates and alerts.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1">
+              {notifications.map((notification, index) => (
+                <Link key={index} href={notification.href} className="block rounded-lg hover:bg-muted/50 -mx-2 px-2 py-2 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-10 w-10 border">
+                      <AvatarFallback className="bg-transparent">
+                        {notification.icon}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1 flex-1">
+                      <p className="text-sm font-medium">{notification.text}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {notification.time}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </AppLayout>
+    </div>
   );
+}
+
+export default function DashboardPage() {
+    return (
+        <AppLayout>
+            <title>{metadata.title as string}</title>
+            <meta name="description" content={metadata.description as string} />
+            <DashboardContent />
+        </AppLayout>
+    );
 }

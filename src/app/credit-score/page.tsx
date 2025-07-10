@@ -15,10 +15,16 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import type { Metadata } from 'next';
+
+const metadata: Metadata = {
+    title: 'Free Credit Score Check | LOAN BUDDY.COM',
+    description: 'Check your CIBIL credit score for free in just a few steps. Get an instant and secure report to understand your financial health.',
+};
 
 type CheckState = 'initial' | 'loading' | 'result';
 
-export default function CreditScorePage() {
+function CreditScoreForm() {
   const { toast } = useToast();
   const [checkState, setCheckState] = useState<CheckState>('initial');
   const [score, setScore] = useState(0);
@@ -91,55 +97,63 @@ export default function CreditScorePage() {
   const progressValue = ((score - 300) / (850 - 300)) * 100;
 
   return (
-    <AppLayout>
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-3xl">Check Your Credit Score</CardTitle>
-            <CardDescription>
-              Enter your Aadhar and PAN details to get your latest CIBIL score for free.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="min-h-[300px] flex items-center justify-center">
-            {checkState === 'initial' && (
-              <div className="w-full max-w-sm space-y-6">
-                 <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="pan">PAN Card Number</Label>
-                        <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value.toUpperCase())} placeholder="ABCDE1234F" maxLength={10} required />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="aadhar">Aadhar Card Number</Label>
-                        <Input id="aadhar" type="text" value={aadhar} onChange={(e) => setAadhar(e.target.value.replace(/\D/g, '').slice(0, 12))} placeholder="xxxx xxxx xxxx" maxLength={12} required />
-                    </div>
-                 </div>
-                <Button size="lg" onClick={handleCheckScore} disabled={!pan || !aadhar} className="w-full">
-                  Check Your Score for FREE
-                </Button>
-              </div>
-            )}
-            {checkState === 'loading' && (
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                <p className="text-muted-foreground">
-                  Securely fetching your credit report...
-                </p>
-              </div>
-            )}
-            {checkState === 'result' && (
-              <div className="w-full space-y-4 animate-in fade-in duration-500 text-center">
-                <p className="text-sm text-muted-foreground">Your CIBIL Score is</p>
-                <p className={`text-7xl font-bold ${scoreInfo.color}`}>
-                  {score}
-                </p>
-                <Progress value={progressValue} aria-label={`Credit score of ${score}`} />
-                <p className={`font-semibold ${scoreInfo.color}`}>{scoreInfo.text}</p>
-                <Button variant="outline" onClick={handleReset}>Check Again</Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </AppLayout>
+    <div className="max-w-2xl mx-auto">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl">Check Your Credit Score</CardTitle>
+          <CardDescription>
+            Enter your Aadhar and PAN details to get your latest CIBIL score for free.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="min-h-[300px] flex items-center justify-center">
+          {checkState === 'initial' && (
+            <div className="w-full max-w-sm space-y-6">
+               <div className="space-y-4">
+                  <div className="space-y-2">
+                      <Label htmlFor="pan">PAN Card Number</Label>
+                      <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value.toUpperCase())} placeholder="ABCDE1234F" maxLength={10} required />
+                  </div>
+                   <div className="space-y-2">
+                      <Label htmlFor="aadhar">Aadhar Card Number</Label>
+                      <Input id="aadhar" type="text" value={aadhar} onChange={(e) => setAadhar(e.target.value.replace(/\D/g, '').slice(0, 12))} placeholder="xxxx xxxx xxxx" maxLength={12} required />
+                  </div>
+               </div>
+              <Button size="lg" onClick={handleCheckScore} disabled={!pan || !aadhar} className="w-full">
+                Check Your Score for FREE
+              </Button>
+            </div>
+          )}
+          {checkState === 'loading' && (
+            <div className="flex flex-col items-center gap-4">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              <p className="text-muted-foreground">
+                Securely fetching your credit report...
+              </p>
+            </div>
+          )}
+          {checkState === 'result' && (
+            <div className="w-full space-y-4 animate-in fade-in duration-500 text-center">
+              <p className="text-sm text-muted-foreground">Your CIBIL Score is</p>
+              <p className={`text-7xl font-bold ${scoreInfo.color}`}>
+                {score}
+              </p>
+              <Progress value={progressValue} aria-label={`Credit score of ${score}`} />
+              <p className={`font-semibold ${scoreInfo.color}`}>{scoreInfo.text}</p>
+              <Button variant="outline" onClick={handleReset}>Check Again</Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
+}
+
+export default function CreditScorePage() {
+    return (
+        <AppLayout>
+            <title>{metadata.title as string}</title>
+            <meta name="description" content={metadata.description as string} />
+            <CreditScoreForm />
+        </AppLayout>
+    );
 }
