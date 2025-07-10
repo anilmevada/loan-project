@@ -37,6 +37,7 @@ import {
 import { Input } from '@/components/ui/input';
 import Logo from './Logo';
 import { SearchContext, useSearch } from '@/hooks/use-search';
+import { DialogTitle } from '@/components/ui/dialog';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -143,6 +144,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DialogTitle className="sr-only">User Menu</DialogTitle>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">Jane Doe</p>
