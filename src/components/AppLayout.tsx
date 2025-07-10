@@ -52,7 +52,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <Logo />
+          <Logo className="text-sidebar-foreground" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>

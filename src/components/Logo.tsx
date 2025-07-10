@@ -1,11 +1,12 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 const LogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    viewBox="0 0 24 24"
+    viewBox="0 0 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
@@ -18,11 +19,16 @@ const LogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export default function Logo() {
+export default function Logo({ className }: { className?: string }) {
   return (
     <div className="flex items-center gap-2">
       <LogoIcon className="h-8 w-8 text-primary" />
-      <span className="text-2xl font-bold text-foreground">
+      <span
+        className={cn(
+          'text-2xl font-bold text-foreground',
+          className
+        )}
+      >
         Apex Finance Hub
       </span>
     </div>
