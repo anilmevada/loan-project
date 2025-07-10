@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -19,8 +20,10 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { BellRing, CheckCircle2, XCircle } from 'lucide-react';
+import { BellRing, CheckCircle2, FileWarning, PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type LoanApplication = {
   type: string;
@@ -51,27 +54,40 @@ const defaultLoanApplications: LoanApplication[] = [
 ];
 
 const notifications = [
-  {
-    icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-    text: 'Your home loan has been approved!',
-    time: '2 days ago',
-  },
-  {
-    icon: <BellRing className="h-4 w-4 text-yellow-500" />,
-    text: 'New insurance plans available for your vehicle.',
-    time: '5 days ago',
-  },
-  {
-    icon: <XCircle className="h-4 w-4 text-red-500" />,
-    text: 'Action required: document submission for personal loan.',
-    time: '1 week ago',
-  },
+    {
+        icon: <CheckCircle2 className="h-5 w-5 text-green-500" />,
+        text: 'Your home loan has been approved!',
+        time: '2 days ago',
+        href: '#',
+    },
+    {
+        icon: <BellRing className="h-5 w-5 text-yellow-500" />,
+        text: 'New insurance plans available for your vehicle.',
+        time: '5 days ago',
+        href: '/insurance',
+    },
+    {
+        icon: <FileWarning className="h-5 w-5 text-red-500" />,
+        text: 'Action required: document submission for personal loan.',
+        time: '1 week ago',
+        href: '/loans/apply?type=Personal%20Loan',
+    },
 ];
 
 export default function DashboardPage() {
   const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
+  const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      setGreeting('Good Morning!');
+    } else if (hour < 18) {
+      setGreeting('Good Afternoon!');
+    } else {
+      setGreeting('Good Evening!');
+    }
+    
     const storedApplications = localStorage.getItem('loanApplications');
     let applications = [];
     if (storedApplications) {
@@ -88,7 +104,6 @@ export default function DashboardPage() {
     if (applications.length > 0) {
       setLoanApplications(applications);
     } else {
-        // Initialize with default if nothing is in storage
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
         setLoanApplications(defaultLoanApplications);
     }
@@ -97,7 +112,10 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="flex flex-col gap-6">
-        <h1 className="text-3xl font-bold uppercase">Welcome to LOAN BUDDY.COM</h1>
+        <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold">{greeting}</h1>
+        </div>
+        
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
@@ -117,14 +135,14 @@ export default function DashboardPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 flex flex-col">
             <CardHeader>
               <CardTitle>Loan Application Status</CardTitle>
               <CardDescription>
                 Track your recent loan applications.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -148,12 +166,12 @@ export default function DashboardPage() {
                               ? 'secondary'
                               : 'destructive'
                           }
-                          className={
+                           className={
                             loan.status === 'Approved'
-                              ? 'bg-green-500/20 text-green-700 border-green-500/30'
+                              ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700'
                               : loan.status === 'Pending'
-                              ? 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30'
-                              : 'bg-red-500/20 text-red-700 border-red-500/30'
+                              ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-700'
+                              : 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700'
                           }
                         >
                           {loan.status}
@@ -163,12 +181,30 @@ export default function DashboardPage() {
                     </TableRow>
                   )) : (
                      <TableRow>
-                        <TableCell colSpan={4} className="text-center">No applications yet.</TableCell>
+                        <TableCell colSpan={4} className="text-center py-10">
+                            <p className="mb-2">You have no active loan applications.</p>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href="/loans">
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Apply for a Loan
+                                </Link>
+                            </Button>
+                        </TableCell>
                      </TableRow>
                   )}
                 </TableBody>
               </Table>
             </CardContent>
+            {loanApplications.length > 0 && (
+                <CardFooter className="border-t pt-4">
+                    <Button asChild className="w-full">
+                        <Link href="/loans">
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Apply for a New Loan
+                        </Link>
+                    </Button>
+                </CardFooter>
+            )}
           </Card>
           <Card className="lg:col-span-3">
             <CardHeader>
@@ -176,21 +212,23 @@ export default function DashboardPage() {
               <CardDescription>Recent updates and alerts.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-1">
                 {notifications.map((notification, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <Avatar className="h-8 w-8 border">
-                      <AvatarFallback className="bg-background">
-                        {notification.icon}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <p className="text-sm font-medium">{notification.text}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {notification.time}
-                      </p>
+                  <Link key={index} href={notification.href} className="block rounded-lg hover:bg-muted/50 -mx-2 px-2 py-2">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-10 w-10 border">
+                        <AvatarFallback className="bg-transparent">
+                          {notification.icon}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid gap-1 flex-1">
+                        <p className="text-sm font-medium">{notification.text}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {notification.time}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </CardContent>
