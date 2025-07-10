@@ -1,3 +1,5 @@
+'use client';
+
 import AppLayout from '@/components/AppLayout';
 import {
   Card,
@@ -16,10 +18,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { BellRing, CheckCircle2, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const loanApplications = [
+type LoanApplication = {
+  type: string;
+  amount: string;
+  status: 'Approved' | 'Pending' | 'Rejected';
+  date: string;
+};
+
+const defaultLoanApplications: LoanApplication[] = [
   {
     type: 'Home Loan',
     amount: '$350,000',
@@ -41,12 +51,37 @@ const loanApplications = [
 ];
 
 const notifications = [
-    { icon: <CheckCircle2 className="h-4 w-4 text-green-500" />, text: 'Your home loan has been approved!', time: '2 days ago' },
-    { icon: <BellRing className="h-4 w-4 text-yellow-500" />, text: 'New insurance plans available for your vehicle.', time: '5 days ago' },
-    { icon: <XCircle className="h-4 w-4 text-red-500" />, text: 'Action required: document submission for personal loan.', time: '1 week ago' },
-]
+  {
+    icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+    text: 'Your home loan has been approved!',
+    time: '2 days ago',
+  },
+  {
+    icon: <BellRing className="h-4 w-4 text-yellow-500" />,
+    text: 'New insurance plans available for your vehicle.',
+    time: '5 days ago',
+  },
+  {
+    icon: <XCircle className="h-4 w-4 text-red-500" />,
+    text: 'Action required: document submission for personal loan.',
+    time: '1 week ago',
+  },
+];
 
 export default function DashboardPage() {
+  const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
+
+  useEffect(() => {
+    const storedApplications = localStorage.getItem('loanApplications');
+    if (storedApplications) {
+      setLoanApplications(JSON.parse(storedApplications));
+    } else {
+        // Initialize with default if nothing is in storage
+        localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
+        setLoanApplications(defaultLoanApplications);
+    }
+  }, []);
+
   return (
     <AppLayout>
       <div className="flex flex-col gap-6">
@@ -55,7 +90,9 @@ export default function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle>Credit Health</CardTitle>
-              <CardDescription>Your current credit score overview.</CardDescription>
+              <CardDescription>
+                Your current credit score overview.
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="text-center">
@@ -68,7 +105,7 @@ export default function DashboardPage() {
               </p>
             </CardContent>
           </Card>
-           <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Loan Application Status</CardTitle>
               <CardDescription>
@@ -86,8 +123,8 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loanApplications.map((loan) => (
-                    <TableRow key={loan.type}>
+                  {loanApplications.map((loan, index) => (
+                    <TableRow key={index}>
                       <TableCell className="font-medium">{loan.type}</TableCell>
                       <TableCell>{loan.amount}</TableCell>
                       <TableCell>
@@ -99,9 +136,13 @@ export default function DashboardPage() {
                               ? 'secondary'
                               : 'destructive'
                           }
-                          className={loan.status === 'Approved' ? 'bg-green-500/20 text-green-700 border-green-500/30' : 
-                                       loan.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30' :
-                                       'bg-red-500/20 text-red-700 border-red-500/30'}
+                          className={
+                            loan.status === 'Approved'
+                              ? 'bg-green-500/20 text-green-700 border-green-500/30'
+                              : loan.status === 'Pending'
+                              ? 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30'
+                              : 'bg-red-500/20 text-red-700 border-red-500/30'
+                          }
                         >
                           {loan.status}
                         </Badge>
@@ -115,23 +156,27 @@ export default function DashboardPage() {
           </Card>
           <Card className="lg:col-span-3">
             <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>Recent updates and alerts.</CardDescription>
+              <CardTitle>Notifications</CardTitle>
+              <CardDescription>Recent updates and alerts.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="space-y-4">
-                    {notifications.map((notification, index) => (
-                        <div key={index} className="flex items-start gap-4">
-                            <Avatar className="h-8 w-8 border">
-                                <AvatarFallback className="bg-background">{notification.icon}</AvatarFallback>
-                            </Avatar>
-                            <div className="grid gap-1">
-                               <p className="text-sm font-medium">{notification.text}</p>
-                               <p className="text-sm text-muted-foreground">{notification.time}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+              <div className="space-y-4">
+                {notifications.map((notification, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <Avatar className="h-8 w-8 border">
+                      <AvatarFallback className="bg-background">
+                        {notification.icon}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <p className="text-sm font-medium">{notification.text}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {notification.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>

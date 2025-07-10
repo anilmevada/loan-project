@@ -21,16 +21,37 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { UploadCloud } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoanApplicationPage() {
   const { toast } = useToast();
+  const router = useRouter();
+  const [loanType, setLoanType] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const storedApplications = localStorage.getItem('loanApplications');
+    const applications = storedApplications ? JSON.parse(storedApplications) : [];
+
+    const newApplication = {
+      type: loanType || 'N/A',
+      amount: `$${Number(loanAmount).toLocaleString()}`,
+      status: 'Pending',
+      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+    };
+
+    applications.push(newApplication);
+    localStorage.setItem('loanApplications', JSON.stringify(applications));
+
     toast({
       title: 'Application Submitted!',
       description: 'We have received your loan application and will review it shortly.',
     });
+    
+    router.push('/dashboard');
   };
   
   return (
@@ -64,15 +85,15 @@ export default function LoanApplicationPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="loan-type">Loan Type</Label>
-                  <Select>
+                  <Select onValueChange={setLoanType} required>
                     <SelectTrigger id="loan-type">
                       <SelectValue placeholder="Select a loan type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="home">Home Loan</SelectItem>
-                      <SelectItem value="car">Car Loan</SelectItem>
-                      <SelectItem value="personal">Personal Loan</SelectItem>
-                      <SelectItem value="education">Education Loan</SelectItem>
+                      <SelectItem value="Home Loan">Home Loan</SelectItem>
+                      <SelectItem value="Car Loan">Car Loan</SelectItem>
+                      <SelectItem value="Personal Loan">Personal Loan</SelectItem>
+                      <SelectItem value="Education Loan">Education Loan</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -82,6 +103,8 @@ export default function LoanApplicationPage() {
                     id="loan-amount"
                     type="number"
                     placeholder="e.g., 50000"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
                     required
                   />
                 </div>
