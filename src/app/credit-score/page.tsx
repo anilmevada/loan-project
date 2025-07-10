@@ -12,12 +12,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 type CheckState = 'initial' | 'loading' | 'result';
 
 export default function CreditScorePage() {
+  const { toast } = useToast();
   const [checkState, setCheckState] = useState<CheckState>('initial');
   const [score, setScore] = useState(0);
   const [pan, setPan] = useState('');
@@ -36,6 +38,14 @@ export default function CreditScorePage() {
   }, [checkState]);
 
   const handleCheckScore = () => {
+    if (aadhar.length < 12) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid Aadhar Number',
+        description: 'Please enter a valid 12-digit Aadhar number.',
+      });
+      return;
+    }
     setCheckState('loading');
   };
 
@@ -73,11 +83,11 @@ export default function CreditScorePage() {
                  <div className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="pan">PAN Card Number</Label>
-                        <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value)} placeholder="ABCDE1234F" required />
+                        <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value.toUpperCase())} placeholder="ABCDE1234F" maxLength={10} required />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="aadhar">Aadhar Card Number</Label>
-                        <Input id="aadhar" value={aadhar} onChange={(e) => setAadhar(e.target.value)} placeholder="xxxx xxxx xxxx" required />
+                        <Input id="aadhar" type="number" value={aadhar} onChange={(e) => setAadhar(e.target.value)} placeholder="xxxx xxxx xxxx" required />
                     </div>
                  </div>
                 <Button size="lg" onClick={handleCheckScore} disabled={!pan || !aadhar} className="w-full">
