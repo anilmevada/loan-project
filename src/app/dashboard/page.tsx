@@ -101,9 +101,10 @@ export default function DashboardPage() {
         }
     }
 
+    // Only set default applications if local storage is completely empty.
     if (applications.length > 0) {
       setLoanApplications(applications);
-    } else {
+    } else if (localStorage.getItem('loanApplications') === null) {
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
         setLoanApplications(defaultLoanApplications);
     }
@@ -111,13 +112,13 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 animate-in fade-in duration-500">
         <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">{greeting}</h1>
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
+          <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
             <CardHeader>
               <CardTitle>Credit Health</CardTitle>
               <CardDescription>
@@ -135,7 +136,7 @@ export default function DashboardPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="lg:col-span-2 flex flex-col">
+          <Card className="lg:col-span-2 flex flex-col transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
             <CardHeader>
               <CardTitle>Loan Application Status</CardTitle>
               <CardDescription>
@@ -154,7 +155,7 @@ export default function DashboardPage() {
                 </TableHeader>
                 <TableBody>
                   {loanApplications.length > 0 ? loanApplications.map((loan, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={index} className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500" style={{ animationDelay: `${index * 100}ms`}}>
                       <TableCell className="font-medium">{loan.type}</TableCell>
                       <TableCell>{loan.amount}</TableCell>
                       <TableCell>
@@ -197,7 +198,7 @@ export default function DashboardPage() {
             </CardContent>
             {loanApplications.length > 0 && (
                 <CardFooter className="border-t pt-4">
-                    <Button asChild className="w-full">
+                    <Button asChild className="w-full transform transition-transform duration-200 active:scale-95">
                         <Link href="/loans">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             Apply for a New Loan
@@ -206,7 +207,7 @@ export default function DashboardPage() {
                 </CardFooter>
             )}
           </Card>
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-3 transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
             <CardHeader>
               <CardTitle>Notifications</CardTitle>
               <CardDescription>Recent updates and alerts.</CardDescription>
@@ -214,7 +215,7 @@ export default function DashboardPage() {
             <CardContent>
               <div className="space-y-1">
                 {notifications.map((notification, index) => (
-                  <Link key={index} href={notification.href} className="block rounded-lg hover:bg-muted/50 -mx-2 px-2 py-2">
+                  <Link key={index} href={notification.href} className="block rounded-lg hover:bg-muted/50 -mx-2 px-2 py-2 transition-colors">
                     <div className="flex items-center gap-4">
                       <Avatar className="h-10 w-10 border">
                         <AvatarFallback className="bg-transparent">
