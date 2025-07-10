@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { useSearch } from '@/hooks/use-search';
 import { useToast } from '@/hooks/use-toast';
-import { Car, CheckCircle, HeartPulse, Plane, Umbrella } from 'lucide-react';
+import { Car, CheckCircle, HeartPulse, Plane, Umbrella, UserCheck } from 'lucide-react';
 import React from 'react';
 
 const insuranceTypes = [
@@ -57,6 +57,17 @@ const insuranceTypes = [
         "Covers medical emergencies",
         "Trip cancellation & delay protection",
         "Baggage loss/delay cover"
+    ]
+  },
+  {
+    icon: <UserCheck className="h-8 w-8 text-primary" />,
+    title: 'Individual Health Insurance',
+    description: 'A dedicated health plan tailored to your individual needs, offering robust coverage for a secure future.',
+    features: [
+        "Personalized coverage options",
+        "Annual health check-ups",
+        "No-claim bonus benefits",
+        "Lifelong renewability"
     ]
   },
 ];
