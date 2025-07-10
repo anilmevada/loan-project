@@ -54,6 +54,21 @@ const availableLoanTypes = [
   'Education Loan',
 ];
 
+const pageKeywords: Record<string, string> = {
+  loans: '/loans',
+  loan: '/loans',
+  insurance: '/insurance',
+  'credit score': '/credit-score',
+  credit: '/credit-score',
+  score: '/credit-score',
+  cibil: '/credit-score',
+  calculator: '/calculators',
+  calculators: '/calculators',
+  emi: '/calculators',
+  eligibility: '/calculators',
+  dashboard: '/dashboard',
+};
+
 function SearchProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   return (
@@ -70,13 +85,32 @@ function Header() {
     const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const query = searchQuery.trim().toLowerCase();
+      
       const matchedLoan = availableLoanTypes.find(loan => loan.toLowerCase() === query);
-
       if (matchedLoan) {
         router.push(`/loans/apply?type=${encodeURIComponent(matchedLoan)}`);
+        return;
+      }
+
+      if (pageKeywords[query]) {
+          router.push(pageKeywords[query]);
+          return;
+      }
+
+      // If no exact match, go to a relevant page based on keywords
+      if (query.includes('loan')) {
+          router.push('/loans');
+      } else if (query.includes('insurance')) {
+          router.push('/insurance');
       } else {
-        // If no exact match, just go to the loans page to show filtered results
-        router.push('/loans');
+        // Fallback for general searches
+        if (usePathname().startsWith('/loans')) {
+            router.push('/loans');
+        } else if (usePathname().startsWith('/insurance')) {
+            router.push('/insurance');
+        } else {
+            router.push('/dashboard');
+        }
       }
     };
 
