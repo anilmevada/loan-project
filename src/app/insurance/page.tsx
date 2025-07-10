@@ -1,3 +1,4 @@
+'use client';
 import AppLayout from '@/components/AppLayout';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useSearch } from '@/hooks/use-search';
 import { Car, HeartPulse, Plane, Umbrella } from 'lucide-react';
 
 const insuranceTypes = [
@@ -34,8 +36,15 @@ const insuranceTypes = [
 ];
 
 export default function InsurancePage() {
+  const { searchQuery } = useSearch();
+
+  const filteredInsurance = insuranceTypes.filter(insurance => 
+      insurance.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      insurance.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <AppLayout>
+    <>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Insurance Services</h1>
@@ -44,7 +53,7 @@ export default function InsurancePage() {
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {insuranceTypes.map((insurance) => (
+          {filteredInsurance.map((insurance) => (
             <Card key={insurance.title} className="flex flex-col">
               <CardHeader className="flex flex-row items-center gap-4">
                 {insurance.icon}
@@ -62,6 +71,6 @@ export default function InsurancePage() {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

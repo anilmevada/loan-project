@@ -1,3 +1,4 @@
+'use client';
 import AppLayout from '@/components/AppLayout';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useSearch } from '@/hooks/use-search';
 import { Car, GraduationCap, Home, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -35,8 +37,15 @@ const loanTypes = [
 ];
 
 export default function LoansPage() {
+    const { searchQuery } = useSearch();
+
+    const filteredLoans = loanTypes.filter(loan => 
+        loan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        loan.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
   return (
-    <AppLayout>
+    <>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Apply for a Loan</h1>
@@ -45,7 +54,7 @@ export default function LoansPage() {
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {loanTypes.map((loan) => (
+          {filteredLoans.map((loan) => (
             <Card key={loan.title} className="flex flex-col">
               <CardHeader className="flex flex-row items-center gap-4">
                 {loan.icon}
@@ -65,6 +74,6 @@ export default function LoansPage() {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }
