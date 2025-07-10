@@ -21,8 +21,8 @@ const LogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function Logo() {
   return (
     <div className="flex items-center gap-2">
-      <LogoIcon className="h-6 w-6 text-primary" />
-      <span className="text-lg font-semibold text-foreground">
+      <LogoIcon className="h-8 w-8 text-primary" />
+      <span className="text-2xl font-bold text-foreground">
         Apex Finance Hub
       </span>
     </div>
