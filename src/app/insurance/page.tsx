@@ -1,6 +1,5 @@
 'use client';
 import AppLayout from '@/components/AppLayout';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { useSearch } from '@/hooks/use-search';
 import { Car, CheckCircle, HeartPulse, Plane, Umbrella } from 'lucide-react';
+import React from 'react';
 
 const insuranceTypes = [
   {
@@ -80,17 +80,13 @@ function InsurancePageContent() {
         {filteredInsurance.map((insurance) => (
           <Card key={insurance.title} className="flex flex-col">
             <CardHeader className="flex flex-row items-center gap-4">
-              <Avatar className="h-16 w-16">
-                  <AvatarFallback className="bg-primary/10">
-                    {React.cloneElement(insurance.icon, { className: 'h-8 w-8 text-primary' })}
-                  </AvatarFallback>
-              </Avatar>
+              {insurance.icon}
               <div>
                 <CardTitle>{insurance.title}</CardTitle>
-                <CardDescription className="mt-1">{insurance.description}</CardDescription>
               </div>
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="flex-grow space-y-4">
+                <p className="text-sm text-muted-foreground">{insurance.description}</p>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                     {insurance.features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2">
