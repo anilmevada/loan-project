@@ -1,3 +1,4 @@
+
 'use client';
 
 import AppLayout from '@/components/AppLayout';
@@ -83,8 +84,8 @@ const notifications = [
 function DashboardContent() {
   const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
   const [greeting, setGreeting] = useState('');
-  const [creditScore, setCreditScore] = useState(780); // Default score
-  const [scoreLastChecked, setScoreLastChecked] = useState('2024-07-01');
+  const [creditScore, setCreditScore] = useState<number | null>(null);
+  const [scoreLastChecked, setScoreLastChecked] = useState('');
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -101,22 +102,16 @@ function DashboardContent() {
     if (storedApplicationsJSON) {
         try {
             const parsed = JSON.parse(storedApplicationsJSON);
-            // Ensure parsed data is an array before setting
             if (Array.isArray(parsed)) {
                 setLoanApplications(parsed);
-            } else {
-                // If data is corrupted (not an array), reset to default
-                localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
-                setLoanApplications(defaultLoanApplications);
             }
         } catch (e) {
             console.error("Failed to parse loan applications from localStorage", e);
-            // If parsing fails, assume corrupted data and reset
-            localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
-            setLoanApplications(defaultLoanApplications);
+             // If data is corrupted, clear it
+            localStorage.removeItem('loanApplications');
         }
     } else {
-        // Only set default applications if local storage is completely empty.
+        // Only set default applications if local storage is completely empty for the first time.
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
         setLoanApplications(defaultLoanApplications);
     }
@@ -124,9 +119,14 @@ function DashboardContent() {
     // Load credit score from localStorage
     const storedScore = localStorage.getItem('creditScore');
     if (storedScore) {
-      const { score, date } = JSON.parse(storedScore);
-      setCreditScore(score);
-      setScoreLastChecked(new Date(date).toISOString().split('T')[0]);
+      try {
+        const { score, date } = JSON.parse(storedScore);
+        setCreditScore(score);
+        setScoreLastChecked(new Date(date).toISOString().split('T')[0]);
+      } catch (e) {
+        console.error("Failed to parse credit score from localStorage", e);
+        localStorage.removeItem('creditScore');
+      }
     }
 
   }, []);
@@ -139,7 +139,7 @@ function DashboardContent() {
     return 'Poor';
   };
 
-  const progressValue = ((creditScore - 300) / (850 - 300)) * 100;
+  const progressValue = creditScore ? ((creditScore - 300) / (850 - 300)) * 100 : 0;
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500">
@@ -172,18 +172,27 @@ function DashboardContent() {
             <CardHeader>
               <CardTitle>Credit Health</CardTitle>
               <CardDescription>
-                Your current credit score overview.
+                {creditScore ? "Your current credit score overview." : "Check your credit score now!"}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <div className="text-center">
-                <span className="text-6xl font-bold text-primary">{creditScore}</span>
-                <p className="text-lg text-muted-foreground">{getScoreDescription(creditScore)}</p>
-              </div>
-              <Progress value={progressValue} aria-label={`Credit score of ${creditScore}`} />
-              <p className="text-sm text-center text-muted-foreground">
-                Last checked: {scoreLastChecked}
-              </p>
+              {creditScore !== null ? (
+                <>
+                  <div className="text-center">
+                    <span className="text-6xl font-bold text-primary">{creditScore}</span>
+                    <p className="text-lg text-muted-foreground">{getScoreDescription(creditScore)}</p>
+                  </div>
+                  <Progress value={progressValue} aria-label={`Credit score of ${creditScore}`} />
+                  <p className="text-sm text-center text-muted-foreground">
+                    Last checked: {scoreLastChecked}
+                  </p>
+                </>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-lg font-semibold mb-2">No score available</p>
+                  <Button size="sm">Check Score</Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </Link>
