@@ -8,6 +8,7 @@ import {
   Gauge,
   Home,
   Landmark,
+  LogOut,
   Search,
   ShieldCheck,
   User,
@@ -192,7 +193,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/">Log out</Link>
+                  <Link href="/">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
