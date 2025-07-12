@@ -43,12 +43,6 @@ export default function LoginForm() {
       return;
     }
 
-    // Check for admin credentials
-    if (email === 'admin@example.com') {
-        router.push('/admin');
-        return;
-    }
-
     // If validation passes, navigate to dashboard
     router.push('/dashboard');
   };
@@ -106,6 +100,11 @@ export default function LoginForm() {
             Don&apos;t have an account?{' '}
             <Link href="/register" className="underline">
               Sign up
+            </Link>
+          </div>
+          <div className="mt-4 text-center text-sm">
+            <Link href="/admin" className="underline">
+              Admin Login
             </Link>
           </div>
         </CardContent>
