@@ -43,6 +43,12 @@ export default function LoginForm() {
       return;
     }
 
+    // Check for admin credentials
+    if (email === 'admin@example.com') {
+        router.push('/admin');
+        return;
+    }
+
     // If validation passes, navigate to dashboard
     router.push('/dashboard');
   };
