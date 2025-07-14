@@ -13,8 +13,8 @@ import Logo from '@/components/Logo';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Sign Up | Apex Finance Hub',
-    description: 'Create a new account with Apex Finance Hub to get started with our financial services.',
+    title: 'Sign Up | loan buddy.com',
+    description: 'Create a new account with loan buddy.com to get started with our financial services.',
 };
 
 export default function RegisterPage() {

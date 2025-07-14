@@ -21,7 +21,7 @@ import { useState } from 'react';
 import type { Metadata } from 'next';
 
 const metadata: Metadata = {
-    title: 'Financial Calculators | Apex Finance Hub',
+    title: 'Financial Calculators | loan buddy.com',
     description: 'Plan your finances with our easy-to-use tools. Calculate your loan EMI and check your loan eligibility in seconds.',
 };
 

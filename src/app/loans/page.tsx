@@ -15,7 +15,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 const metadata: Metadata = {
-    title: 'Apply for a Loan | Apex Finance Hub',
+    title: 'Apply for a Loan | loan buddy.com',
     description: 'Find the perfect loan for your needs. We offer Home Loans, Car Loans, Personal Loans, and Education Loans with competitive rates.',
 };
 

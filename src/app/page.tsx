@@ -12,8 +12,8 @@ import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Welcome | Apex Finance Hub',
-    description: 'Welcome to Apex Finance Hub. Please select your role to continue.',
+    title: 'Welcome | loan buddy.com',
+    description: 'Welcome to loan buddy.com. Please select your role to continue.',
 };
 
 export default function WelcomePage() {
@@ -24,7 +24,7 @@ export default function WelcomePage() {
           <div className="inline-block mx-auto">
             <Logo />
           </div>
-          <CardTitle className="text-3xl">Welcome to Apex Finance Hub</CardTitle>
+          <CardTitle className="text-3xl">Welcome to loan buddy.com</CardTitle>
           <CardDescription>
             Your trusted partner in financial services. Please select your role to proceed.
           </CardDescription>

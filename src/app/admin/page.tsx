@@ -27,7 +27,7 @@ import Link from 'next/link';
 
 
 const metadata: Metadata = {
-    title: 'Admin Dashboard | Apex Finance Hub',
+    title: 'Admin Dashboard | loan buddy.com',
     description: 'Admin dashboard to monitor all user activity, including loan applications and credit score checks.',
 };
 

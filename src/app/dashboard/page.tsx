@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button';
 import type { Metadata } from 'next';
 
 const metadata: Metadata = {
-    title: 'Dashboard | Apex Finance Hub',
+    title: 'Dashboard | loan buddy.com',
     description: 'Your personal finance dashboard. Track loan applications, check your credit score, and get important notifications.',
 };
 

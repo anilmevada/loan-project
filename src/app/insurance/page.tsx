@@ -16,7 +16,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 const metadata: Metadata = {
-    title: 'Insurance Services | Apex Finance Hub',
+    title: 'Insurance Services | loan buddy.com',
     description: 'Protect what matters most. Explore our range of insurance plans, including Health, Vehicle, Life, and Travel insurance.',
 };
 
