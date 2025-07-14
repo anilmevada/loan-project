@@ -72,13 +72,36 @@ export default function CreditScoreForm() {
     }
   }, [checkState, pan, aadhar]);
 
+  const handlePanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toUpperCase();
+    let formattedPan = '';
+
+    for (let i = 0; i < value.length && i < 10; i++) {
+        const char = value[i];
+        if (i < 5) { // First 5 are letters
+            if (char >= 'A' && char <= 'Z') {
+                formattedPan += char;
+            }
+        } else if (i < 9) { // Next 4 are numbers
+            if (char >= '0' && char <= '9') {
+                formattedPan += char;
+            }
+        } else { // Last one is a letter
+            if (char >= 'A' && char <= 'Z') {
+                formattedPan += char;
+            }
+        }
+    }
+    setPan(formattedPan);
+  };
+
   const handleCheckScore = () => {
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panRegex.test(pan)) {
         toast({
             variant: 'destructive',
             title: 'Invalid PAN Number',
-            description: 'Please enter a valid PAN in the format ABCDE1234F.',
+            description: 'Please enter a valid 10-character PAN number.',
         });
         return;
     }
@@ -127,7 +150,7 @@ export default function CreditScoreForm() {
                <div className="space-y-4">
                   <div className="space-y-2">
                       <Label htmlFor="pan">PAN Card Number</Label>
-                      <Input id="pan" value={pan} onChange={(e) => setPan(e.target.value.toUpperCase())} placeholder="ABCDE1234F" maxLength={10} required />
+                      <Input id="pan" value={pan} onChange={handlePanChange} placeholder="ABCDE1234F" maxLength={10} required />
                   </div>
                    <div className="space-y-2">
                       <Label htmlFor="aadhar">Aadhar Card Number</Label>
