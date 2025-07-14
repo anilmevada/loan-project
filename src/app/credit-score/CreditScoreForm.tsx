@@ -25,26 +25,47 @@ export default function CreditScoreForm() {
   const [aadhar, setAadhar] = useState('');
 
   useEffect(() => {
-    // Check if a score is already in localStorage
-    const storedScore = localStorage.getItem('creditScore');
+    const storedScore = localStorage.getItem('userCreditScore');
     if (storedScore) {
-      const { score: savedScore, pan: savedPan, aadhar: savedAadhar } = JSON.parse(storedScore);
-      setScore(savedScore);
-      setPan(savedPan);
-      setAadhar(savedAadhar);
-      setCheckState('result');
+      try {
+        const { score: savedScore, pan: savedPan, aadhar: savedAadhar } = JSON.parse(storedScore);
+        if (savedScore && savedPan && savedAadhar) {
+          setScore(savedScore);
+          setPan(savedPan);
+          setAadhar(savedAadhar);
+          setCheckState('result');
+        }
+      } catch (e) {
+        console.error("Failed to parse user credit score from localStorage", e);
+        localStorage.removeItem('userCreditScore');
+      }
     }
   }, []);
-
 
   useEffect(() => {
     if (checkState === 'loading') {
       const timer = setTimeout(() => {
-        // Simulate a score between 600 and 850
         const randomScore = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
         setScore(randomScore);
-        // Save the new score and date to localStorage
-        localStorage.setItem('creditScore', JSON.stringify({ score: randomScore, date: new Date(), pan, aadhar }));
+
+        const newScoreEntry = { score: randomScore, date: new Date().toISOString(), pan, aadhar };
+
+        localStorage.setItem('userCreditScore', JSON.stringify(newScoreEntry));
+
+        const allScoresJSON = localStorage.getItem('allCreditScores');
+        let allScores = [];
+        if (allScoresJSON) {
+          try {
+            allScores = JSON.parse(allScoresJSON);
+            if (!Array.isArray(allScores)) allScores = [];
+          } catch (e) {
+            allScores = [];
+          }
+        }
+        
+        allScores.push(newScoreEntry);
+        localStorage.setItem('allCreditScores', JSON.stringify(allScores));
+        
         setCheckState('result');
       }, 2000);
       return () => clearTimeout(timer);
@@ -76,7 +97,7 @@ export default function CreditScoreForm() {
   const handleReset = () => {
     setPan('');
     setAadhar('');
-    localStorage.removeItem('creditScore');
+    localStorage.removeItem('userCreditScore');
     setCheckState('initial');
   }
 
@@ -89,7 +110,6 @@ export default function CreditScoreForm() {
   };
 
   const scoreInfo = getScoreDescription(score);
-  // Normalize score from 300-850 range to 0-100 for progress bar
   const progressValue = ((score - 300) / (850 - 300)) * 100;
 
   return (

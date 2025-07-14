@@ -50,7 +50,6 @@ function AdminDashboardContent() {
   const [creditScores, setCreditScores] = useState<CreditScoreEntry[]>([]);
 
   useEffect(() => {
-    // Load loan applications from localStorage
     const storedApplicationsJSON = localStorage.getItem('loanApplications');
     if (storedApplicationsJSON) {
         try {
@@ -63,17 +62,15 @@ function AdminDashboardContent() {
         }
     }
 
-    // Load credit scores from localStorage
-    const storedScore = localStorage.getItem('creditScore');
-    if (storedScore) {
+    const allScoresJSON = localStorage.getItem('allCreditScores');
+    if (allScoresJSON) {
       try {
-        const parsed = JSON.parse(storedScore);
-        // Ensure it's an object with a score property before adding
-        if (parsed && typeof parsed.score === 'number') {
-            setCreditScores([parsed]);
+        const parsed = JSON.parse(allScoresJSON);
+        if (Array.isArray(parsed)) {
+          setCreditScores(parsed);
         }
       } catch(e) {
-          console.error("Failed to parse credit score from localStorage", e);
+          console.error("Failed to parse all credit scores from localStorage", e);
       }
     }
 
@@ -255,6 +252,7 @@ function AdminDashboardContent() {
                     <TableRow>
                         <TableHead>Score</TableHead>
                         <TableHead>PAN</TableHead>
+                        <TableHead>Aadhar</TableHead>
                         <TableHead className="text-right">Date Checked</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -263,11 +261,12 @@ function AdminDashboardContent() {
                         <TableRow key={index}>
                             <TableCell className="font-bold text-primary">{item.score}</TableCell>
                             <TableCell>{item.pan || 'N/A'}</TableCell>
+                            <TableCell>{item.aadhar || 'N/A'}</TableCell>
                             <TableCell className="text-right">{new Date(item.date).toLocaleDateString()}</TableCell>
                         </TableRow>
                     )) : (
                         <TableRow>
-                            <TableCell colSpan={3} className="text-center py-10">
+                            <TableCell colSpan={4} className="text-center py-10">
                                 No credit scores have been checked yet.
                             </TableCell>
                         </TableRow>

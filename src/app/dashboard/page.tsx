@@ -97,7 +97,6 @@ function DashboardContent() {
       setGreeting('Good Evening!');
     }
     
-    // Load loan applications from localStorage
     const storedApplicationsJSON = localStorage.getItem('loanApplications');
     if (storedApplicationsJSON) {
         try {
@@ -107,17 +106,14 @@ function DashboardContent() {
             }
         } catch (e) {
             console.error("Failed to parse loan applications from localStorage", e);
-             // If data is corrupted, clear it
             localStorage.removeItem('loanApplications');
         }
     } else {
-        // Only set default applications if local storage is completely empty for the first time.
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
         setLoanApplications(defaultLoanApplications);
     }
 
-    // Load credit score from localStorage
-    const storedScore = localStorage.getItem('creditScore');
+    const storedScore = localStorage.getItem('userCreditScore');
     if (storedScore) {
       try {
         const { score, date } = JSON.parse(storedScore);
@@ -125,7 +121,7 @@ function DashboardContent() {
         setScoreLastChecked(new Date(date).toISOString().split('T')[0]);
       } catch (e) {
         console.error("Failed to parse credit score from localStorage", e);
-        localStorage.removeItem('creditScore');
+        localStorage.removeItem('userCreditScore');
       }
     }
 
