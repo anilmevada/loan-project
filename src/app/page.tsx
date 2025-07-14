@@ -12,8 +12,8 @@ import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Welcome | LOAN BUDDY.COM',
-    description: 'Welcome to LOAN BUDDY.COM. Please select your role to continue.',
+    title: 'Welcome | Apex Finance Hub',
+    description: 'Welcome to Apex Finance Hub. Please select your role to continue.',
 };
 
 export default function WelcomePage() {

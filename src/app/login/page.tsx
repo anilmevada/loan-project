@@ -1,9 +1,9 @@
-import LoginForm from '@/components/LoginForm';
+import LoginForm from '@/app/LoginForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Login | LOAN BUDDY.COM',
-    description: 'Login to your LOAN BUDDY.COM account to manage your loans, insurance, and financial health.',
+    title: 'Login | Apex Finance Hub',
+    description: 'Login to your Apex Finance Hub account to manage your loans, insurance, and financial health.',
 };
 
 export default function LoginPage() {

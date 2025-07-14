@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 
 export const metadata: Metadata = {
-  title: 'LOAN BUDDY.COM',
+  title: 'Apex Finance Hub',
   description:
-    'LOAN BUDDY.COM - Your one-stop solution for loans, insurance, and credit management.',
+    'Apex Finance Hub - Your one-stop solution for loans, insurance, and credit management.',
 };
 
 export default function RootLayout({

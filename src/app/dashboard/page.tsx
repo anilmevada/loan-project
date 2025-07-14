@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button';
 import type { Metadata } from 'next';
 
 const metadata: Metadata = {
-    title: 'Dashboard | LOAN BUDDY.COM',
+    title: 'Dashboard | Apex Finance Hub',
     description: 'Your personal finance dashboard. Track loan applications, check your credit score, and get important notifications.',
 };
 
@@ -80,6 +80,15 @@ const notifications = [
         href: '/loans/apply?type=Personal%20Loan',
     },
 ];
+
+const marqueeItems = [
+    'Home Loans', 'Car Loans', 'Personal Loans', 'Education Loans',
+    'Health Insurance', 'Vehicle Insurance', 'Life Insurance', 'Travel Insurance',
+    'Free Credit Score Check', 'EMI Calculator', 'Loan Eligibility Tool'
+];
+// Duplicate for a seamless loop
+const marqueeContent = [...marqueeItems, ...marqueeItems];
+
 
 function DashboardContent() {
   const [loanApplications, setLoanApplications] = useState<LoanApplication[]>([]);
@@ -140,21 +149,15 @@ function DashboardContent() {
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-500">
       <div className="relative flex overflow-x-hidden bg-primary text-primary-foreground rounded-lg">
-          <div className="py-1 animate-marquee whitespace-nowrap">
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+          <div className="py-2 animate-marquee whitespace-nowrap">
+              {marqueeContent.map((item, index) => (
+                <span key={index} className="text-sm mx-4 font-medium">{item}</span>
+              ))}
           </div>
-          <div className="absolute top-0 py-1 animate-marquee2 whitespace-nowrap">
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
-              <span className="text-sm mx-4 font-medium">Welcome to LOAN BUDDY.COM</span>
+          <div className="absolute top-0 py-2 animate-marquee2 whitespace-nowrap">
+              {marqueeContent.map((item, index) => (
+                <span key={index} className="text-sm mx-4 font-medium">{item}</span>
+              ))}
           </div>
       </div>
 
