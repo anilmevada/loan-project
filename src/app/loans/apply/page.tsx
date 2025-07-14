@@ -25,6 +25,9 @@ function LoanApplicationForm() {
   
   const [loanType, setLoanType] = useState(initialLoanType);
   const [loanAmount, setLoanAmount] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [studentName, setStudentName] = useState('');
+  const [guardianName, setGuardianName] = useState('');
 
   useEffect(() => {
     setLoanType(initialLoanType);
@@ -59,24 +62,24 @@ function LoanApplicationForm() {
             if (Array.isArray(parsed)) {
               applications = parsed;
             } else {
-              // Data is corrupted, start with a fresh array
               applications = [];
             }
         } catch (error) {
             console.error("Failed to parse loan applications from localStorage", error);
-            // Parsing failed, start with a fresh array
             applications = [];
         }
     }
 
+    const applicantName = loanType === 'Education Loan' ? studentName : fullName;
+
     const newApplication = {
+      user: applicantName,
       type: loanType,
       amount: `₹${Number(loanAmount).toLocaleString()}`,
       status: 'Pending',
-      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+      date: new Date().toISOString().split('T')[0],
     };
 
-    // Add new application to the top of the list
     const updatedApplications = [newApplication, ...applications];
 
     try {
@@ -103,7 +106,7 @@ function LoanApplicationForm() {
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="full-name">Full Name</Label>
-          <Input id="full-name" placeholder="Jane Doe" required />
+          <Input id="full-name" placeholder="Jane Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
@@ -134,11 +137,11 @@ function LoanApplicationForm() {
     <>
         <div className="space-y-2">
             <Label htmlFor="student-name">Student Full Name</Label>
-            <Input id="student-name" placeholder="Alex Smith" required />
+            <Input id="student-name" placeholder="Alex Smith" value={studentName} onChange={(e) => setStudentName(e.target.value)} required />
         </div>
         <div className="space-y-2">
             <Label htmlFor="guardian-name">Father's/Guardian's Name</Label>
-            <Input id="guardian-name" placeholder="John Smith" required />
+            <Input id="guardian-name" placeholder="John Smith" value={guardianName} onChange={(e) => setGuardianName(e.target.value)} required />
         </div>
         <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">

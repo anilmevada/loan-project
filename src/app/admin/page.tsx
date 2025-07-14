@@ -19,7 +19,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import type { Metadata } from 'next';
-import { Activity, CheckCircle, Clock, LogOut, TrendingUp } from 'lucide-react';
+import { Activity, CheckCircle, Clock, LogOut, TrendingUp, User } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,7 @@ const metadata: Metadata = {
 };
 
 type LoanApplication = {
+  user: string;
   type: string;
   amount: string;
   status: 'Approved' | 'Pending' | 'Rejected';
@@ -152,6 +153,7 @@ function AdminDashboardContent() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Applicant Name</TableHead>
                   <TableHead>Loan Type</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Status</TableHead>
@@ -161,7 +163,8 @@ function AdminDashboardContent() {
               <TableBody>
                 {loanApplications.length > 0 ? loanApplications.map((loan, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">{loan.type}</TableCell>
+                    <TableCell className="font-medium">{loan.user || 'N/A'}</TableCell>
+                    <TableCell>{loan.type}</TableCell>
                     <TableCell>{loan.amount}</TableCell>
                     <TableCell>
                       <Badge
@@ -187,7 +190,7 @@ function AdminDashboardContent() {
                   </TableRow>
                 )) : (
                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-10">
+                      <TableCell colSpan={5} className="text-center py-10">
                           No loan applications have been submitted yet.
                       </TableCell>
                    </TableRow>

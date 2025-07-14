@@ -33,6 +33,7 @@ const metadata: Metadata = {
 };
 
 type LoanApplication = {
+  user: string;
   type: string;
   amount: string;
   status: 'Approved' | 'Pending' | 'Rejected';
@@ -41,18 +42,21 @@ type LoanApplication = {
 
 const defaultLoanApplications: LoanApplication[] = [
   {
+    user: 'Jane Doe',
     type: 'Home Loan',
     amount: '₹35,00,000',
     status: 'Approved',
     date: '2024-07-15',
   },
   {
+    user: 'John Smith',
     type: 'Car Loan',
     amount: '₹2,50,000',
     status: 'Pending',
     date: '2024-07-20',
   },
   {
+    user: 'Peter Jones',
     type: 'Personal Loan',
     amount: '₹1,00,000',
     status: 'Rejected',
@@ -110,12 +114,16 @@ function DashboardContent() {
     if (storedApplicationsJSON) {
         try {
             const parsed = JSON.parse(storedApplicationsJSON);
-            if (Array.isArray(parsed)) {
+            if (Array.isArray(parsed) && parsed.length > 0) {
                 setLoanApplications(parsed);
+            } else {
+                localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
+                setLoanApplications(defaultLoanApplications);
             }
         } catch (e) {
             console.error("Failed to parse loan applications from localStorage", e);
-            localStorage.removeItem('loanApplications');
+            localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
+            setLoanApplications(defaultLoanApplications);
         }
     } else {
         localStorage.setItem('loanApplications', JSON.stringify(defaultLoanApplications));
