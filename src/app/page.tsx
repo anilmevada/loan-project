@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +22,7 @@ export default function WelcomePage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="mx-auto max-w-md w-full text-center relative overflow-hidden">
-        <div className="absolute top-2 right-2 text-xs text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-bl-lg rounded-tr-lg">
+        <div className="absolute top-2 right-2 text-xs font-bold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-bl-lg rounded-tr-lg">
           Created by anil suthar
         </div>
         <CardHeader className="space-y-4 pt-12">
