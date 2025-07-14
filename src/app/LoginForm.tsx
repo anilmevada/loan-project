@@ -102,11 +102,6 @@ export default function LoginForm() {
               Sign up
             </Link>
           </div>
-          <div className="mt-4 text-center text-sm">
-            <Link href="/admin/login" className="underline">
-              Admin Login
-            </Link>
-          </div>
         </CardContent>
       </Card>
   )
