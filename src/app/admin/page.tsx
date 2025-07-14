@@ -1,7 +1,6 @@
 
 'use client';
 
-import AppLayout from '@/components/AppLayout';
 import {
   Card,
   CardContent,
@@ -20,12 +19,15 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import type { Metadata } from 'next';
-import { Activity, CheckCircle, Clock, FileX, TrendingUp, Users } from 'lucide-react';
+import { Activity, CheckCircle, Clock, LogOut, TrendingUp } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import Logo from '@/components/Logo';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 
 const metadata: Metadata = {
-    title: 'Admin Dashboard | LOAN BUDDY.COM',
+    title: 'Admin Dashboard | Apex Finance Hub',
     description: 'Admin dashboard to monitor all user activity, including loan applications and credit score checks.',
 };
 
@@ -206,31 +208,37 @@ function AdminDashboardContent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={loanStatusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {loanStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'hsl(var(--background))', 
-                    borderColor: 'hsl(var(--border))'
-                  }}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+             {loanApplications.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                    <Pie
+                    data={loanStatusData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                    {loanStatusData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                    </Pie>
+                    <Tooltip 
+                    contentStyle={{ 
+                        backgroundColor: 'hsl(var(--background))', 
+                        borderColor: 'hsl(var(--border))'
+                    }}
+                    />
+                    <Legend />
+                </PieChart>
+                </ResponsiveContainer>
+             ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                    No data to display.
+                </div>
+             )}
           </CardContent>
         </Card>
         
@@ -273,12 +281,29 @@ function AdminDashboardContent() {
   );
 }
 
+function AdminHeader() {
+  return (
+    <header className="flex h-16 items-center justify-between border-b bg-card px-4 lg:px-6">
+      <Logo />
+      <Button asChild variant="outline">
+        <Link href="/">
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Link>
+      </Button>
+    </header>
+  );
+}
+
 export default function AdminPage() {
     return (
-        <AppLayout>
+        <div className="flex min-h-screen w-full flex-col">
             <title>{metadata.title as string}</title>
             <meta name="description" content={metadata.description as string} />
-            <AdminDashboardContent />
-        </AppLayout>
+            <AdminHeader />
+            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+                <AdminDashboardContent />
+            </main>
+        </div>
     );
 }

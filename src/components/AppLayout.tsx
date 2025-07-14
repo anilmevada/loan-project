@@ -82,6 +82,7 @@ function SearchProvider({ children }: { children: ReactNode }) {
 function Header() {
     const { searchQuery, setSearchQuery } = useSearch();
     const router = useRouter();
+    const pathname = usePathname();
 
     const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -105,9 +106,9 @@ function Header() {
           router.push('/insurance');
       } else {
         // Fallback for general searches
-        if (usePathname().startsWith('/loans')) {
+        if (pathname.startsWith('/loans')) {
             router.push('/loans');
-        } else if (usePathname().startsWith('/insurance')) {
+        } else if (pathname.startsWith('/insurance')) {
             router.push('/insurance');
         } else {
             router.push('/dashboard');
