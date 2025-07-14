@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -12,19 +13,22 @@ import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Welcome | loan buddy.com',
-    description: 'Welcome to loan buddy.com. Please select your role to continue.',
+    title: 'Welcome | Apex Finance Hub',
+    description: 'Welcome to Apex Finance Hub. Please select your role to continue.',
 };
 
 export default function WelcomePage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="mx-auto max-w-md w-full text-center">
-        <CardHeader className="space-y-4">
+      <Card className="mx-auto max-w-md w-full text-center relative overflow-hidden">
+        <div className="absolute top-2 right-2 text-xs text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-bl-lg rounded-tr-lg">
+          Created by anil suthar
+        </div>
+        <CardHeader className="space-y-4 pt-12">
           <div className="inline-block mx-auto">
             <Logo />
           </div>
-          <CardTitle className="text-3xl">Welcome to loan buddy.com</CardTitle>
+          <CardTitle className="text-3xl">Welcome to Apex Finance Hub</CardTitle>
           <CardDescription>
             Your trusted partner in financial services. Please select your role to proceed.
           </CardDescription>
