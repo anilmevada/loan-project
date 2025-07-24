@@ -15,15 +15,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/Logo';
 import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
+type LoginState = 'initial' | 'otp_sent' | 'loading';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
+  const [loginState, setLoginState] = useState<LoginState>('initial');
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogin = () => {
+  const handleSendOtp = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast({
@@ -34,11 +37,23 @@ export default function LoginForm() {
       return;
     }
 
-    if (password.length < 6) {
+    setLoginState('loading');
+    // Simulate sending OTP
+    setTimeout(() => {
+      setLoginState('otp_sent');
+      toast({
+        title: 'OTP Sent',
+        description: `An OTP has been sent to ${email}. (Hint: use 123456)`,
+      });
+    }, 1500);
+  };
+
+  const handleVerifyOtp = () => {
+    if (otp !== '123456') {
       toast({
         variant: 'destructive',
-        title: 'Invalid Password',
-        description: 'Password must be at least 6 characters long.',
+        title: 'Invalid OTP',
+        description: 'The OTP you entered is incorrect. Please try again.',
       });
       return;
     }
@@ -46,6 +61,11 @@ export default function LoginForm() {
     // If validation passes, navigate to dashboard
     router.push('/dashboard');
   };
+  
+  const handleBack = () => {
+    setOtp('');
+    setLoginState('initial');
+  }
 
   return (
       <Card className="mx-auto max-w-sm w-full">
@@ -55,43 +75,58 @@ export default function LoginForm() {
             </div>
           <CardTitle className="text-2xl">User Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            {loginState === 'initial' 
+                ? 'Enter your email to receive a secure login code.'
+                : "We've sent a 6-digit code to your email."
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <Button onClick={handleLogin} className="w-full">
-              Login
-            </Button>
+             {loginState === 'loading' ? (
+                 <div className="flex justify-center items-center h-24">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                 </div>
+             ) : loginState === 'initial' ? (
+                <>
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="m@example.com"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <Button onClick={handleSendOtp} className="w-full">
+                        Send OTP
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <div className="grid gap-2">
+                        <Label htmlFor="otp">One-Time Password (OTP)</Label>
+                        <Input
+                            id="otp"
+                            type="text"
+                            placeholder="Enter 6-digit code"
+                            required
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            maxLength={6}
+                        />
+                    </div>
+                    <Button onClick={handleVerifyOtp} className="w-full">
+                      Verify & Login
+                    </Button>
+                    <Button variant="link" size="sm" onClick={handleBack} className="text-sm">
+                        Use a different email
+                    </Button>
+                </>
+            )}
+
             <Button variant="outline" className="w-full">
               Login with Google
             </Button>
