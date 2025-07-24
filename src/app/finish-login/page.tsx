@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
+import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -40,6 +40,7 @@ function FinishLoginPageContent() {
                     });
                     router.push('/dashboard');
                 } catch (error: any) {
+                    console.error("Firebase Sign-In Error:", error);
                     setMessage('Login failed. The link may have expired or been used already.');
                     toast({
                         variant: 'destructive',

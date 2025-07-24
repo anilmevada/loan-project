@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import Logo from '@/components/Logo';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { getAuth, sendSignInLinkToEmail } from 'firebase/auth';
+import { sendSignInLinkToEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 type LoginState = 'initial' | 'link_sent' | 'loading';
@@ -63,6 +63,7 @@ export default function LoginForm() {
       setLoginState('initial');
       const errorCode = error.code;
       const errorMessage = error.message;
+      console.error("Firebase Error:", errorCode, errorMessage);
       toast({
         variant: 'destructive',
         title: 'Error Sending Link',
