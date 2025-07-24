@@ -16,17 +16,18 @@ import { Label } from '@/components/ui/label';
 import Logo from '@/components/Logo';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { getAuth, sendSignInLinkToEmail } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
-type LoginState = 'initial' | 'otp_sent' | 'loading';
+type LoginState = 'initial' | 'link_sent' | 'loading';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
   const [loginState, setLoginState] = useState<LoginState>('initial');
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSendOtp = () => {
+  const handleSendLink = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast({
@@ -38,34 +39,38 @@ export default function LoginForm() {
     }
 
     setLoginState('loading');
-    // Simulate sending OTP
-    setTimeout(() => {
-      setLoginState('otp_sent');
-      toast({
-        title: 'OTP Sent',
-        description: `An OTP has been sent to ${email}. (Hint: use 123456)`,
-      });
-    }, 1500);
-  };
 
-  const handleVerifyOtp = () => {
-    if (otp !== '123456') {
+    const actionCodeSettings = {
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be in the authorized domains list in the Firebase Console.
+      url: `${window.location.origin}/finish-login`,
+      // This must be true.
+      handleCodeInApp: true,
+    };
+
+    try {
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      // The link was successfully sent. Inform the user.
+      // Save the email locally so you don't need to ask the user for it again
+      // if they open the link on the same device.
+      window.localStorage.setItem('emailForSignIn', email);
+      setLoginState('link_sent');
+      toast({
+        title: 'Secure Link Sent',
+        description: `A sign-in link has been sent to ${email}. Check your inbox!`,
+      });
+    } catch (error: any) {
+      setLoginState('initial');
+      const errorCode = error.code;
+      const errorMessage = error.message;
       toast({
         variant: 'destructive',
-        title: 'Invalid OTP',
-        description: 'The OTP you entered is incorrect. Please try again.',
+        title: 'Error Sending Link',
+        description: errorMessage,
       });
-      return;
     }
-
-    // If validation passes, navigate to dashboard
-    router.push('/dashboard');
   };
-  
-  const handleBack = () => {
-    setOtp('');
-    setLoginState('initial');
-  }
+
 
   return (
       <Card className="mx-auto max-w-sm w-full">
@@ -75,9 +80,9 @@ export default function LoginForm() {
             </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription>
-            {loginState === 'initial' 
-                ? 'Enter your email to receive a secure login code.'
-                : "We've sent a 6-digit code to your email."
+            {loginState !== 'link_sent'
+                ? 'Enter your email to receive a secure login link.'
+                : "We've sent a magic link to your email. Click it to log in."
             }
           </CardDescription>
         </CardHeader>
@@ -87,7 +92,7 @@ export default function LoginForm() {
                  <div className="flex justify-center items-center h-24">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                  </div>
-             ) : loginState === 'initial' ? (
+              ) : loginState !== 'link_sent' ? (
                 <>
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
@@ -100,31 +105,14 @@ export default function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    <Button onClick={handleSendOtp} className="w-full">
-                        Send OTP
+                    <Button onClick={handleSendLink} className="w-full">
+                        Send Secure Link
                     </Button>
                 </>
             ) : (
-                <>
-                    <div className="grid gap-2">
-                        <Label htmlFor="otp">One-Time Password (OTP)</Label>
-                        <Input
-                            id="otp"
-                            type="text"
-                            placeholder="Enter 6-digit code"
-                            required
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                            maxLength={6}
-                        />
-                    </div>
-                    <Button onClick={handleVerifyOtp} className="w-full">
-                      Verify & Login
-                    </Button>
-                    <Button variant="link" size="sm" onClick={handleBack} className="text-sm">
-                        Use a different email
-                    </Button>
-                </>
+                <div className="text-center p-4 bg-accent/20 rounded-md">
+                    <p>Please check your email inbox and click the link to complete your login.</p>
+                </div>
             )}
 
             <Button variant="outline" className="w-full">
