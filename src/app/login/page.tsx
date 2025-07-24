@@ -9,8 +9,6 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      {/* This div is required for the invisible reCAPTCHA to work */}
-      <div id="recaptcha-container"></div>
       <LoginForm />
     </div>
   );
