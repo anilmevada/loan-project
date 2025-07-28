@@ -17,61 +17,33 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-type LoginState = 'initial' | 'otp_sent' | 'loading';
-
 export default function LoginForm() {
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [loginState, setLoginState] = useState<LoginState>('initial');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSendOtp = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast({
-        variant: 'destructive',
-        title: 'Invalid Email',
-        description: 'Please enter a valid email address.',
-      });
-      return;
-    }
+  const handleLogin = () => {
+    setIsLoading(true);
 
-    setLoginState('loading');
-    // Simulate sending OTP
+    // Simulate API call for login
     setTimeout(() => {
-      setLoginState('otp_sent');
-      toast({
-        title: 'OTP Sent',
-        description: `An OTP has been sent to ${email}. (Hint: use 123456)`,
-      });
+      if (email === 'anilsuthar2866@gmail.com' && password === 'ANIL@123') {
+        toast({
+          title: 'Login Successful!',
+          description: 'Welcome back!',
+        });
+        router.push('/dashboard');
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: 'Invalid email or password. Please try again.',
+        });
+        setIsLoading(false);
+      }
     }, 1500);
-  };
-
-  const handleVerifyOtp = () => {
-    if (otp !== '123456') {
-      toast({
-        variant: 'destructive',
-        title: 'Invalid OTP',
-        description: 'The OTP you entered is incorrect. Please try again.',
-      });
-      return;
-    }
-
-    setLoginState('loading');
-    // If validation passes, navigate to dashboard
-    setTimeout(() => {
-       toast({
-        title: 'Login Successful!',
-        description: 'Welcome back!',
-      });
-      router.push('/dashboard');
-    }, 1000);
-  };
-
-  const handleBack = () => {
-    setOtp('');
-    setLoginState('initial');
   };
 
   return (
@@ -82,58 +54,41 @@ export default function LoginForm() {
         </div>
         <CardTitle className="text-2xl">User Login</CardTitle>
         <CardDescription>
-          {loginState !== 'otp_sent'
-            ? 'Enter your email to receive a secure login code.'
-            : "We've sent a 6-digit code to your email."}
+          Enter your email and password to access your account.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          {loginState === 'loading' ? (
-            <div className="flex justify-center items-center h-24">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-48">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
-          ) : loginState !== 'otp_sent' ? (
+          ) : (
             <>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="anilsuthar2866@gmail.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <Button onClick={handleSendOtp} className="w-full">
-                Send OTP
-              </Button>
-            </>
-          ) : (
-            <>
               <div className="grid gap-2">
-                <Label htmlFor="otp">One-Time Password (OTP)</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
-                  id="otp"
-                  type="text"
-                  placeholder="Enter 6-digit code"
+                  id="password"
+                  type="password"
+                  placeholder="ANIL@123"
                   required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  maxLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button onClick={handleVerifyOtp} className="w-full">
-                Verify & Login
-              </Button>
-              <Button
-                variant="link"
-                size="sm"
-                onClick={handleBack}
-                className="text-sm"
-              >
-                Use a different email
+              <Button onClick={handleLogin} className="w-full">
+                Login
               </Button>
             </>
           )}
