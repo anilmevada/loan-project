@@ -23,26 +23,19 @@ export default function AdminLoginPage() {
   const { toast } = useToast();
 
   const handleAdminLogin = () => {
-    if (email !== 'admin@example.com') {
+    if (email === 'admin@123.com' && password === 'ADMIN@123') {
+      toast({
+        title: 'Admin Login Successful!',
+        description: 'Welcome to the dashboard.',
+      });
+      router.push('/admin');
+    } else {
       toast({
         variant: 'destructive',
-        title: 'Invalid Admin Email',
-        description: 'Please enter a valid admin email address.',
+        title: 'Invalid Credentials',
+        description: 'Please enter the correct admin email and password.',
       });
-      return;
     }
-
-    if (password.length < 6) {
-      toast({
-        variant: 'destructive',
-        title: 'Invalid Password',
-        description: 'Password must be at least 6 characters long.',
-      });
-      return;
-    }
-
-    // If validation passes, navigate to admin dashboard
-    router.push('/admin');
   };
 
   return (
@@ -64,7 +57,7 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@example.com"
+                placeholder="admin@123.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -75,6 +68,7 @@ export default function AdminLoginPage() {
               <Input
                 id="password"
                 type="password"
+                placeholder="********"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
