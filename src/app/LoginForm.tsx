@@ -27,20 +27,30 @@ export default function LoginForm() {
   const handleLogin = () => {
     setIsLoading(true);
 
-    // Simulate API call for login
     setTimeout(() => {
-      if (email === 'anilsuthar2866@gmail.com' && password === 'ANIL@123') {
-        toast({
-          title: 'Login Successful!',
-          description: 'Welcome back!',
-        });
-        router.push('/dashboard');
+      const storedUser = localStorage.getItem('registeredUser');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        if (userData.email === email && userData.password === password) {
+          toast({
+            title: 'Login Successful!',
+            description: 'Welcome back!',
+          });
+          router.push('/dashboard');
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Login Failed',
+            description: 'Invalid email or password. Please try again.',
+          });
+          setIsLoading(false);
+        }
       } else {
         toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: 'Invalid email or password. Please try again.',
-        });
+            variant: 'destructive',
+            title: 'Login Failed',
+            description: 'No registered user found. Please sign up.',
+          });
         setIsLoading(false);
       }
     }, 1500);
