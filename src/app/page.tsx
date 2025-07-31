@@ -5,13 +5,13 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import Logo from '@/components/Logo';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ShieldCheck, User } from 'lucide-react';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
     title: 'Welcome | LOAN BUDDY.COM',
@@ -20,33 +20,45 @@ export const metadata: Metadata = {
 
 export default function WelcomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="mx-auto max-w-md w-full text-center relative overflow-hidden">
-        <div className="absolute top-2 right-2 text-xs font-bold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-bl-lg rounded-tr-lg">
-          Created by anil suthar
-        </div>
-        <CardHeader className="space-y-4 pt-12">
-          <div className="inline-block mx-auto">
-            <Logo />
+    <div className="w-full lg:grid lg:min-h-[100vh] lg:grid-cols-2 xl:min-h-[100vh]">
+      <div className="flex items-center justify-center py-12">
+        <div className="mx-auto grid w-[350px] gap-6">
+           <div className="absolute top-4 right-4 text-xs font-bold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-lg">
+              Created by anil suthar
+            </div>
+          <div className="grid gap-2 text-center">
+             <div className="inline-block mx-auto mb-4">
+              <Logo />
+            </div>
+            <h1 className="text-3xl font-bold">Select Your Role</h1>
+            <p className="text-balance text-muted-foreground">
+              Choose whether you are a user or an administrator to proceed.
+            </p>
           </div>
-          <CardTitle className="text-3xl">Welcome to LOAN BUDDY.COM</CardTitle>
-          <CardDescription>
-            Your trusted partner in financial services. Please select your role to proceed.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <Button asChild size="lg" className="w-full">
+          <div className="grid gap-4">
+             <Button asChild size="lg" className="w-full">
                 <Link href="/login">
-                    User Login <ArrowRight className="ml-2 h-5 w-5" />
+                    <User className="mr-2 h-5 w-5" /> User Login
                 </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full">
                 <Link href="/admin/login">
-                    Admin Login <ArrowRight className="ml-2 h-5 w-5" />
+                    <ShieldCheck className="mr-2 h-5 w-5" /> Admin Login 
                 </Link>
             </Button>
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </div>
+      <div className="hidden bg-muted lg:block">
+        <Image
+          src="https://placehold.co/1080x1920.png"
+          alt="A person reviewing financial documents, symbolizing loans and financial services."
+          data-ai-hint="finance planning"
+          width="1080"
+          height="1920"
+          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        />
+      </div>
     </div>
   );
 }
