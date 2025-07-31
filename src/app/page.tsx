@@ -22,7 +22,7 @@ export default function WelcomePage() {
   return (
     <div className="w-full lg:grid lg:min-h-[100vh] lg:grid-cols-2 xl:min-h-[100vh]">
       <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
+        <div className="mx-auto grid w-[400px] gap-6">
            <div className="absolute top-4 right-4 text-xs font-bold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-lg">
               Created by anil suthar
             </div>
