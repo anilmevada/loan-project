@@ -9,6 +9,7 @@ import {
   Home,
   Landmark,
   LogOut,
+  Palette,
   Search,
   ShieldCheck,
   User,
@@ -35,11 +36,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import Logo from './Logo';
 import { SearchContext, useSearch } from '@/hooks/use-search';
 import { DialogTitle } from '@/components/ui/dialog';
+import { useTheme } from '@/hooks/use-theme';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -100,13 +106,11 @@ function Header() {
           return;
       }
 
-      // If no exact match, go to a relevant page based on keywords
       if (query.includes('loan')) {
           router.push('/loans');
       } else if (query.includes('insurance')) {
           router.push('/insurance');
       } else {
-        // Fallback for general searches
         if (pathname.startsWith('/loans')) {
             router.push('/loans');
         } else if (pathname.startsWith('/insurance')) {
@@ -140,6 +144,35 @@ function Header() {
         </Button>
       </header>
     )
+}
+
+function ThemeSwitcher() {
+  const { setTheme } = useTheme();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Palette />
+          <span className="sr-only">Switch Theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme('blue')}>
+          <div className="w-4 h-4 rounded-full bg-[#1E3A8A] mr-2" />
+          Default
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('zinc')}>
+          <div className="w-4 h-4 rounded-full bg-zinc-800 mr-2" />
+          Zinc
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('rose')}>
+           <div className="w-4 h-4 rounded-full bg-rose-600 mr-2" />
+          Rose
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 export default function AppLayout({ children }: { children: ReactNode }) {
@@ -182,27 +215,30 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="justify-start gap-2 w-full">
-                  <User /> <span>Jane Doe</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DialogTitle className="sr-only">User Menu</DialogTitle>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Jane Doe</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      jane.doe@example.com
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="justify-start gap-2 flex-1">
+                    <User /> <span>Jane Doe</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DialogTitle className="sr-only">User Menu</DialogTitle>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">Jane Doe</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        jane.doe@example.com
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <ThemeSwitcher />
+            </div>
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
