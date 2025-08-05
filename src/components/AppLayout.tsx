@@ -1,3 +1,4 @@
+
 'use client';
 import { type ReactNode, useState } from 'react';
 import Link from 'next/link';
@@ -163,7 +164,7 @@ function ThemeSwitcher() {
           Default
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('zinc')}>
-          <div className="w-4 h-4 rounded-full bg-zinc-800 mr-2" />
+          <div className="w-4 h-4 rounded-full bg-zinc-500 mr-2" />
           Zinc
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('rose')}>
