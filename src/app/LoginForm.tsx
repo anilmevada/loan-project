@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,15 +24,21 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const [storedUser, setStoredUser] = useState<any>(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem('registeredUser');
+    if (user) {
+      setStoredUser(JSON.parse(user));
+    }
+  }, []);
 
   const handleLogin = () => {
     setIsLoading(true);
 
     setTimeout(() => {
-      const storedUser = localStorage.getItem('registeredUser');
       if (storedUser) {
-        const userData = JSON.parse(storedUser);
-        if (userData.email === email && userData.password === password) {
+        if (storedUser.email === email && storedUser.password === password) {
           toast({
             title: 'Login Successful!',
             description: 'Welcome back!',
