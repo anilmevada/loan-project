@@ -1,6 +1,6 @@
 
 'use client';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -159,12 +159,12 @@ function ThemeSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('blue')}>
-          <div className="w-4 h-4 rounded-full bg-[#1E3A8A] mr-2" />
+        <DropdownMenuItem onClick={() => setTheme('default')}>
+          <div className="w-4 h-4 rounded-full bg-blue-600 mr-2" />
           Default
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('zinc')}>
-          <div className="w-4 h-4 rounded-full bg-zinc-500 mr-2" />
+          <div className="w-4 h-4 rounded-full bg-zinc-700 mr-2" />
           Zinc
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('rose')}>
@@ -178,6 +178,18 @@ function ThemeSwitcher() {
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { setTheme } = useTheme();
+  
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.className = storedTheme;
+    } else {
+      setTheme('default');
+      document.documentElement.className = 'default';
+    }
+  }, [setTheme]);
 
   return (
     <SearchProvider>
