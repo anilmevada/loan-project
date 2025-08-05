@@ -10,7 +10,6 @@ import {
   Home,
   Landmark,
   LogOut,
-  Palette,
   Search,
   ShieldCheck,
   User,
@@ -27,7 +26,6 @@ import {
   SidebarFooter,
   SidebarTrigger,
   SidebarInset,
-  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,16 +35,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import Logo from './Logo';
 import { SearchContext, useSearch } from '@/hooks/use-search';
 import { DialogTitle } from '@/components/ui/dialog';
-import { useTheme } from '@/hooks/use-theme';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -147,49 +140,8 @@ function Header() {
     )
 }
 
-function ThemeSwitcher() {
-  const { setTheme } = useTheme();
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Palette />
-          <span className="sr-only">Switch Theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('default')}>
-          <div className="w-4 h-4 rounded-full bg-blue-600 mr-2" />
-          Default
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('zinc')}>
-          <div className="w-4 h-4 rounded-full bg-zinc-700 mr-2" />
-          Zinc
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('rose')}>
-           <div className="w-4 h-4 rounded-full bg-rose-600 mr-2" />
-          Rose
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { setTheme } = useTheme();
-  
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme) {
-      setTheme(storedTheme);
-      document.documentElement.className = storedTheme;
-    } else {
-      setTheme('default');
-      document.documentElement.className = 'default';
-    }
-  }, [setTheme]);
 
   return (
     <SearchProvider>
@@ -250,7 +202,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <ThemeSwitcher />
             </div>
           </SidebarFooter>
         </Sidebar>
